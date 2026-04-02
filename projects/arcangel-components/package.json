@@ -3,6 +3,10 @@
   "version": "1.0.1",
   "description": "Componentes UI reutilizables para Angular (botón, input, date picker, tabla, stepper, select, etc.).",
   "license": "SOFTCARIBBEAN",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mailoon/arcangel-components.git"
+  },
   "peerDependencies": {
     "@angular/common": ">=19.0.0 <23.0.0",
     "@angular/core": ">=19.0.0 <23.0.0",
