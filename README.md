@@ -26,7 +26,6 @@ npm run publish:lib
 # Compilar solo la librería (salida: dist/arcangel-components)
 ng build arcangel-components
 
-# Probar el empaquetado sin publicar
 cd dist/arcangel-components && npm pack
 
 # Demo local (no se publica)
