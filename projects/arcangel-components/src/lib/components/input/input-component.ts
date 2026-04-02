@@ -13,7 +13,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import type { ButtonLikeShape, ButtonLikeSize, ButtonLikeVariant } from '../../shared/button-like-styles';
 import {
   getButtonLikeSizeClasses,
-  getInputWrapperVariantClasses,
   resolveButtonLikeShapeClasses,
 } from '../../shared/button-like-styles';
 
@@ -88,7 +87,6 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   get wrapperClasses(): string {
-    const variantBlock = getInputWrapperVariantClasses(this.variant);
     const sizeBlock = getButtonLikeSizeClasses(this.size);
     const shapeBlock = resolveButtonLikeShapeClasses(this.shape, this.shapeClass);
 
@@ -103,7 +101,6 @@ export class InputComponent implements ControlValueAccessor {
       'inline-flex items-center gap-2 overflow-hidden',
       'transition-all duration-200',
       'outline-none focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2',
-      variantBlock,
       sizeBlock,
       shapeBlock,
       this.backgroundClass || '',

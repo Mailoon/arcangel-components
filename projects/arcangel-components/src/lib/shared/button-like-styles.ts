@@ -56,9 +56,3 @@ export function resolveButtonLikeShapeClasses(shape: ButtonLikeShape, shapeClass
   return getButtonLikeShapeClasses(shape);
 }
 
-/**
- * Mismas bases de color que el botón, pero `focus-within:ring-*` para envolver un `<input>`.
- */
-export function getInputWrapperVariantClasses(variant: ButtonLikeVariant): string {
-  return getButtonLikeVariantClasses(variant).replace(/focus:ring-/g, 'focus-within:ring-');
-}
