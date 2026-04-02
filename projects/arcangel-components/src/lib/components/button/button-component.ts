@@ -118,7 +118,7 @@ export class ButtonComponent implements OnInit, OnChanges {
 
     return [
       'inline-flex items-center justify-center gap-2 font-semibold',
-      'transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
+      'transition-all duration-200',
       variantClasses || '',
       sizeClasses || '',
       shapeClasses || '',
@@ -156,9 +156,9 @@ export class ButtonComponent implements OnInit, OnChanges {
 
   private getStateClasses(): string {
     if (this.currentState() === 'success')
-      return 'bg-green-500 hover:bg-green-600';
+      return 'bg-green-500';
     if (this.currentState() === 'error')
-      return 'bg-red-500 hover:bg-red-600';
+      return 'bg-red-500';
     return '';
   }
 

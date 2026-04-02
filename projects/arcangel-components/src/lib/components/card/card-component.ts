@@ -90,10 +90,10 @@ export class CardComponent {
 
   getActionVariantClass(variant?: string): string {
     const map: Record<string, string> = {
-      primary: 'bg-blue-600 text-white hover:bg-blue-700',
-      secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
-      ghost: 'bg-transparent text-gray-700 hover:bg-gray-100',
-      danger: 'bg-red-600 text-white hover:bg-red-700',
+      primary: 'bg-blue-600 text-white',
+      secondary: 'bg-gray-200 text-gray-800',
+      ghost: 'bg-transparent text-gray-700',
+      danger: 'bg-red-600 text-white',
     };
     return map[variant ?? 'ghost'] ?? map['ghost'];
   }

@@ -1,8 +1,8 @@
 {
   "name": "arcangel-components",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Componentes UI reutilizables para Angular (botón, input, date picker, tabla, stepper, select, etc.).",
-  "license": "UNLICENSED",
+  "license": "SOFTCARIBBEAN",
   "peerDependencies": {
     "@angular/common": ">=19.0.0 <23.0.0",
     "@angular/core": ">=19.0.0 <23.0.0",

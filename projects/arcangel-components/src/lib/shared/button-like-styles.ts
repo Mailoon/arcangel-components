@@ -12,13 +12,13 @@ export type ButtonLikeSize = 'sm' | 'md' | 'lg';
 export type ButtonLikeShape = 'rounded' | 'rounded-md' | 'rounded-lg' | 'pill' | 'square';
 
 const VARIANT_CLASSES: Record<ButtonLikeVariant, string> = {
-  primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
-  secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-400',
-  outline: 'border border-blue-600 text-blue-600 bg-transparent hover:bg-blue-50 focus:ring-blue-500',
-  ghost: 'bg-transparent text-gray-800 hover:bg-gray-100 focus:ring-gray-400',
-  danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
-  warning: 'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-400',
-  success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500',
+  primary: 'bg-blue-600 text-white ',
+  secondary: 'bg-gray-200 text-gray-800 ',
+  outline: 'border border-blue-600 text-blue-600 bg-transparent',
+  ghost: 'bg-transparent text-gray-800',
+  danger: 'bg-red-600 text-white',
+  warning: 'bg-yellow-500 text-white',
+  success: 'bg-green-600 text-white',
 };
 
 const SIZE_CLASSES: Record<ButtonLikeSize, string> = {
