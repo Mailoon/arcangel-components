@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "build": "ng build arcangel-components",
+    "watch": "ng build arcangel-components --watch --configuration development",
     "test": "ng test",
     "publish:lib": "ng build arcangel-components && npm publish ./dist/arcangel-components"
   },
