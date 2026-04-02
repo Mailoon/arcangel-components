@@ -1,0 +1,111 @@
+<div
+  class="stepper-container"
+  [class]="customClass"
+  [class.stepper-breakpoint-sm]="breakpoint === 'sm'"
+  [class.stepper-breakpoint-md]="breakpoint === 'md'"
+  [class.stepper-breakpoint-lg]="breakpoint === 'lg'"
+>
+  <div class="stepper-steps-wrapper">
+    <!-- Desktop: horizontal -->
+    <div class="stepper-desktop">
+      @for (step of steps; track step.id; let i = $index) {
+        <div class="stepper-step-node">
+          <div
+            class="stepper-step-circle"
+            [style.background-color]="getStepStyles(i)['background-color']"
+            [style.border-color]="getStepStyles(i)['border-color']"
+            [style.color]="getStepStyles(i)['color']"
+          >
+            @if (getStepState(i) === 'completed' && (step.completedIconTemplate || step.completedIconClass)) {
+              @if (step.completedIconTemplate) {
+                <ng-container *ngTemplateOutlet="step.completedIconTemplate"></ng-container>
+              } @else if (step.completedIconClass) {
+                <i [class]="step.completedIconClass">{{ step.completedIconContent ?? '' }}</i>
+              }
+            } @else {
+              <span class="stepper-step-number">{{ i + 1 }}</span>
+            }
+          </div>
+          <span class="stepper-step-name">{{ step.name }}</span>
+        </div>
+        @if (i < steps.length - 1) {
+          <div
+            class="stepper-connector"
+            [style.background-color]="getConnectorColor(i)"
+            role="presentation"
+          ></div>
+        }
+      }
+    </div>
+    <!-- Mobile: vertical -->
+    <div class="stepper-mobile">
+      @for (step of steps; track step.id; let i = $index) {
+        <div class="stepper-step-row">
+          <div
+            class="stepper-step-circle"
+            [style.background-color]="getStepStyles(i)['background-color']"
+            [style.border-color]="getStepStyles(i)['border-color']"
+            [style.color]="getStepStyles(i)['color']"
+          >
+            @if (getStepState(i) === 'completed' && (step.completedIconTemplate || step.completedIconClass)) {
+              @if (step.completedIconTemplate) {
+                <ng-container *ngTemplateOutlet="step.completedIconTemplate"></ng-container>
+              } @else if (step.completedIconClass) {
+                <i [class]="step.completedIconClass">{{ step.completedIconContent ?? '' }}</i>
+              }
+            } @else {
+              <span class="stepper-step-number">{{ i + 1 }}</span>
+            }
+          </div>
+          <span class="stepper-step-name">{{ step.name }}</span>
+        </div>
+        @if (i < steps.length - 1) {
+          <div
+            class="stepper-connector-vertical"
+            [style.background-color]="getConnectorColor(i)"
+          ></div>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="stepper-body">
+    <ng-content></ng-content>
+  </div>
+
+  <div class="stepper-actions">
+    <div class="stepper-actions-left">
+      @if (showCancelButton && !cancelButton.hidden) {
+        <button-component
+          [label]="cancelButton.label ?? 'Cancelar'"
+          [labelTemplate]="cancelButton.labelTemplate"
+          [labelTemplateContext]="{ $implicit: buttonContext() }"
+          [variant]="getButtonVariant(cancelButton)"
+          (clicked)="onCancel()"
+        ></button-component>
+      }
+    </div>
+    <div class="stepper-actions-right">
+      @if (!previousButton.hidden) {
+        <button-component
+          [label]="previousButton.label ?? 'Anterior'"
+          [labelTemplate]="previousButton.labelTemplate"
+          [labelTemplateContext]="{ $implicit: buttonContext() }"
+          [variant]="getButtonVariant(previousButton)"
+          [disabled]="isPreviousDisabled()"
+          (clicked)="onPrevious()"
+        ></button-component>
+      }
+      @if (!nextButton.hidden) {
+        <button-component
+          [label]="nextButton.label ?? 'Siguiente'"
+          [labelTemplate]="nextButton.labelTemplate"
+          [labelTemplateContext]="{ $implicit: buttonContext() }"
+          [variant]="getButtonVariant(nextButton)"
+          [disabled]="isNextDisabled()"
+          (clicked)="onNext()"
+        ></button-component>
+      }
+    </div>
+  </div>
+</div>

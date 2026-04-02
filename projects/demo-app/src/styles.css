@@ -1,0 +1,169 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ——— Documentación de componentes ——— */
+.docs-intro {
+  color: #4b5563;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  max-width: 72ch;
+}
+
+.docs-intro code,
+.docs-section-desc code {
+  padding: 0.1em 0.35em;
+  border-radius: 0.25rem;
+  background: #eef2ff;
+  color: #4338ca;
+  font-size: 0.9em;
+}
+
+.docs-section-desc {
+  color: #6b7280;
+  font-size: 0.9375rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+/* Contenedor de código: contraste, borde y sombra */
+.docs-code-block {
+  --doc-code-fg: #e2e8f0;
+  background: linear-gradient(155deg, #1e293b 0%, #0f172a 48%, #0c1222 100%);
+  border: 1px solid rgba(129, 140, 248, 0.4);
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.35) inset,
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.docs-code-block pre {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.docs-code-block code {
+  color: var(--doc-code-fg);
+  font-family: inherit;
+}
+
+/* Tokens manuales (ngNonBindable + spans) */
+.docs-code-block .code-tag {
+  color: #f472b6;
+  font-weight: 600;
+}
+
+.docs-code-block .code-attr {
+  color: #7dd3fc;
+}
+
+.docs-code-block .code-string {
+  color: #bef264;
+}
+
+.docs-code-block .code-bracket {
+  color: #94a3b8;
+}
+
+.docs-code-block .code-keyword {
+  color: #c4b5fd;
+  font-weight: 600;
+}
+
+.docs-code-block .code-comment {
+  color: #64748b;
+  font-style: italic;
+}
+
+.docs-code-block .code-plain {
+  color: #cbd5e1;
+}
+
+/* Prism (app-doc-highlighted-code) */
+.docs-code-block--prism .token.tag,
+.docs-code-block--prism .token.punctuation.tag {
+  color: #f472b6;
+}
+
+.docs-code-block--prism .token.attr-name,
+.docs-code-block--prism .token.namespace {
+  color: #7dd3fc;
+}
+
+.docs-code-block--prism .token.attr-value,
+.docs-code-block--prism .token.string,
+.docs-code-block--prism .token.char,
+.docs-code-block--prism .token.inserted,
+.docs-code-block--prism .token.selector {
+  color: #bef264;
+}
+
+.docs-code-block--prism .token.punctuation,
+.docs-code-block--prism .token.operator {
+  color: #94a3b8;
+}
+
+.docs-code-block--prism .token.comment,
+.docs-code-block--prism .token.prolog,
+.docs-code-block--prism .token.doctype,
+.docs-code-block--prism .token.cdata {
+  color: #64748b;
+  font-style: italic;
+}
+
+.docs-code-block--prism .token.keyword,
+.docs-code-block--prism .token.boolean,
+.docs-code-block--prism .token.constant {
+  color: #c4b5fd;
+  font-weight: 600;
+}
+
+.docs-code-block--prism .token.function,
+.docs-code-block--prism .token.class-name {
+  color: #fde68a;
+}
+
+.docs-code-block--prism .token.number {
+  color: #fdba74;
+}
+
+.docs-code-block--prism .token.property,
+.docs-code-block--prism .token.parameter {
+  color: #7dd3fc;
+}
+
+.docs-code-block--prism .token.regex,
+.docs-code-block--prism .token.important,
+.docs-code-block--prism .token.variable {
+  color: #fca5a5;
+}
+
+/* Páginas input / date-picker: mismas reglas que .docs-code-block */
+.doc-code {
+  background: linear-gradient(155deg, #1e293b 0%, #0f172a 48%, #0c1222 100%);
+  border: 1px solid rgba(129, 140, 248, 0.4);
+  border-radius: 0.5rem;
+  padding: 1rem 1.125rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  overflow-x: auto;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.35) inset,
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.doc-code code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  white-space: pre;
+  color: #e2e8f0;
+}

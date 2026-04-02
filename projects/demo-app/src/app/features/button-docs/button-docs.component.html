@@ -1,0 +1,321 @@
+<section class="p-8">
+  <h1 class="text-3xl font-bold mb-6">Documentación - Button Component</h1>
+
+  <p class="docs-intro">
+    El <code>button-component</code> es un botón reutilizable y accesible que ofrece múltiples variantes de color, tamaños, formas y soporte para iconos. Incluye estados de carga, éxito/error, debounce, modo enlace (href/routerLink) y personalización mediante clases Tailwind. Es ideal para mantener una apariencia consistente en toda la aplicación.
+  </p>
+
+  <section>
+    <h2 class="text-lg font-bold mb-4">1. Básico + Iconos con Material Icons</h2>
+    <p class="docs-section-desc">
+      Botón con texto e iconos a izquierda o derecha usando plantillas (<code>leftIconTemplate</code>, <code>rightIconTemplate</code>). Útil para acciones con contexto visual como navegación o acciones principales.
+    </p>
+    <app-doc-highlighted-code [code]="codeIconsIntro" language="markup" ariaLabel="Código: botón con icono" />
+    <div class="flex gap-4 flex-wrap">
+      <button-component
+        label="Home"
+        [leftIconTemplate]="iconHome"
+        [backgroundClass]="'bg-dark-graySC'"
+        [hoverClass]="'hover:bg-dark-gray-contrastSC'"
+        [textClass]="'text-white'"
+        [borderClass]="'rounded-full'"
+      ></button-component>
+      <button-component
+        label="Forward"
+        [rightIconTemplate]="iconForward"
+        [backgroundClass]="'bg-dark-graySC'"
+        [hoverClass]="'hover:bg-dark-gray-contrastSC'"
+        [textClass]="'text-white'"
+      ></button-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">2. Variantes de Color</h2>
+    <p class="docs-section-desc">
+      Siete variantes predefinidas para diferentes contextos: primary (acción principal), secondary, outline, ghost, danger (destructivo), warning y success. Se aplican automáticamente al pasar el input <code>variant</code>.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span> <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"Primary"</span> <span class="code-attr">variant</span><span class="code-bracket">=</span><span class="code-string">"primary"</span><span class="code-tag">&gt;&lt;/button-component&gt;</span>
+<span class="code-tag">&lt;button-component</span> <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"Danger"</span> <span class="code-attr">variant</span><span class="code-bracket">=</span><span class="code-string">"danger"</span><span class="code-tag">&gt;&lt;/button-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <button-component label="Primary" variant="primary"></button-component>
+      <button-component label="Secondary" variant="secondary"></button-component>
+      <button-component label="Outline" variant="outline"></button-component>
+      <button-component label="Ghost" variant="ghost"></button-component>
+      <button-component label="Danger" variant="danger"></button-component>
+      <button-component label="Warning" variant="warning"></button-component>
+      <button-component label="Success" variant="success"></button-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">3. Tamaños</h2>
+    <p class="docs-section-desc">
+      Tres tamaños disponibles: <code>sm</code> (pequeño), <code>md</code> (mediano, por defecto) y <code>lg</code> (grande). Controlan el padding y el tamaño de fuente.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span> <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"Small"</span> <span class="code-attr">size</span><span class="code-bracket">=</span><span class="code-string">"sm"</span><span class="code-tag">&gt;&lt;/button-component&gt;</span>
+<span class="code-tag">&lt;button-component</span> <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"Large"</span> <span class="code-attr">size</span><span class="code-bracket">=</span><span class="code-string">"lg"</span><span class="code-tag">&gt;&lt;/button-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap items-center">
+      <button-component label="Small" size="sm"></button-component>
+      <button-component label="Medium" size="md"></button-component>
+      <button-component label="Large" size="lg"></button-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">4. Shapes</h2>
+    <p class="docs-section-desc">
+      Forma de los bordes: <code>rounded</code> (esquinas redondeadas), <code>pill</code> (completamente redondeado) o <code>square</code> (sin redondeo).
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span> <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"Pill"</span> <span class="code-attr">shape</span><span class="code-bracket">=</span><span class="code-string">"pill"</span><span class="code-tag">&gt;&lt;/button-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <button-component label="Rounded" shape="rounded"></button-component>
+      <button-component label="Pill" shape="pill"></button-component>
+      <button-component label="Square" shape="square"></button-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">5. Loading State</h2>
+    <p class="docs-section-desc">
+      Cuando <code>[loading]="true"</code>, el botón muestra un spinner y se deshabilita. Ideal para operaciones asíncronas. Puedes vincularlo a una señal o variable reactiva.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span>
+  <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"Click to load"</span>
+  <span class="code-attr">[loading]</span><span class="code-bracket">=</span><span class="code-string">"isLoading()"</span>
+  <span class="code-attr">(clicked)</span><span class="code-bracket">=</span><span class="code-string">"simulateLoading()"</span>
+<span class="code-tag">&gt;&lt;/button-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <button-component
+        label="Click to load"
+        [loading]="isLoading()"
+        (clicked)="simulateLoading()"
+      ></button-component>
+      <button-component label="Loading..." [loading]="true" variant="secondary"></button-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">6. Estados Success/Error</h2>
+    <p class="docs-section-desc">
+      El input <code>state</code> permite mostrar feedback visual: <code>success</code> (verde) o <code>error</code> (rojo). Útil para confirmar acciones como guardar o eliminar.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span>
+  <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"Success"</span>
+  <span class="code-attr">[state]</span><span class="code-bracket">=</span><span class="code-string">"currentState()"</span>
+  <span class="code-attr">(clicked)</span><span class="code-bracket">=</span><span class="code-string">"setSuccess()"</span>
+<span class="code-tag">&gt;&lt;/button-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <button-component
+        label="Success"
+        [state]="currentState()"
+        (clicked)="setSuccess()"
+        variant="success"
+      ></button-component>
+      <button-component
+        label="Error"
+        [state]="currentState()"
+        (clicked)="setError()"
+        variant="danger"
+      ></button-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">7. Full Width</h2>
+    <p class="docs-section-desc">
+      Con <code>[fullWidth]="true"</code> el botón ocupa el 100% del ancho del contenedor. Útil en formularios o layouts de columna única.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span>
+  <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"Full Width Button"</span>
+  <span class="code-attr">[fullWidth]</span><span class="code-bracket">=</span><span class="code-string">"true"</span>
+  <span class="code-attr">variant</span><span class="code-bracket">=</span><span class="code-string">"primary"</span>
+<span class="code-tag">&gt;&lt;/button-component&gt;</span></code></pre>
+    </div>
+    <button-component label="Full Width Button" [fullWidth]="true" variant="primary"></button-component>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">8. Square (Icon Only)</h2>
+    <p class="docs-section-desc">
+      Combina <code>[square]="true"</code> con un icono (sin <code>label</code>) para botones de solo icono. Siempre incluye <code>ariaLabel</code> para accesibilidad.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span>
+  <span class="code-attr">[square]</span><span class="code-bracket">=</span><span class="code-string">"true"</span>
+  <span class="code-attr">[leftIconTemplate]</span><span class="code-bracket">=</span><span class="code-string">"iconHome"</span>
+  <span class="code-attr">[ariaLabel]</span><span class="code-bracket">=</span><span class="code-string">"Home button"</span>
+<span class="code-tag">&gt;&lt;/button-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <button-component
+        label=""
+        [square]="true"
+        [leftIconTemplate]="iconHome"
+        variant="primary"
+        [ariaLabel]="'Home button'"
+      ></button-component>
+      <button-component
+        label=""
+        [square]="true"
+        [leftIconTemplate]="iconSettings"
+        variant="secondary"
+        [ariaLabel]="'Settings button'"
+      ></button-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">9. Accesibilidad + Tooltip</h2>
+    <p class="docs-section-desc">
+      Usa <code>ariaLabel</code>, <code>ariaDescribedBy</code> y <code>tooltip</code> para mejorar la experiencia con lectores de pantalla y dar contexto al usuario al pasar el cursor.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span>
+  <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"Accessible Button"</span>
+  <span class="code-attr">ariaLabel</span><span class="code-bracket">=</span><span class="code-string">"Save document"</span>
+  <span class="code-attr">tooltip</span><span class="code-bracket">=</span><span class="code-string">"Click to save your changes"</span>
+<span class="code-tag">&gt;&lt;/button-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <button-component
+        label="Accessible Button"
+        [ariaLabel]="'Save document'"
+        tooltip="Click to save your changes"
+        [ariaDescribedBy]="'save-help'"
+      ></button-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">10. Link Mode</h2>
+    <p class="docs-section-desc">
+      Con <code>href</code> el botón se renderiza como <code>&lt;a&gt;</code> y funciona como enlace externo. Usa <code>target="_blank"</code> y <code>rel="noopener noreferrer"</code> para enlaces que abren en nueva pestaña.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span>
+  <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"External Link"</span>
+  <span class="code-attr">href</span><span class="code-bracket">=</span><span class="code-string">"https://angular.io"</span>
+  <span class="code-attr">target</span><span class="code-bracket">=</span><span class="code-string">"_blank"</span>
+  <span class="code-attr">rel</span><span class="code-bracket">=</span><span class="code-string">"noopener noreferrer"</span>
+<span class="code-tag">&gt;&lt;/button-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <button-component
+        label="External Link"
+        href="https://angular.io"
+        target="_blank"
+        rel="noopener noreferrer"
+        variant="outline"
+      ></button-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">11. Keyboard Support + Long Press</h2>
+    <p class="docs-section-desc">
+      El botón responde a Enter y Espacio. El evento <code>(longPress)</code> se emite al mantener presionado unos 500ms, útil para acciones secundarias o confirmación.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span>
+  <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"Press Enter or Space"</span>
+  <span class="code-attr">(clicked)</span><span class="code-bracket">=</span><span class="code-string">"onKeyboardClick()"</span>
+  <span class="code-attr">(longPress)</span><span class="code-bracket">=</span><span class="code-string">"onLongPress()"</span>
+<span class="code-tag">&gt;&lt;/button-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <button-component
+        label="Press Enter or Space"
+        (clicked)="onKeyboardClick()"
+        (longPress)="onLongPress()"
+        variant="primary"
+      ></button-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">12. Debounce (500ms)</h2>
+    <p class="docs-section-desc">
+      <code>debounceTime</code> en milisegundos evita múltiples clics rápidos. Ideal para evitar envíos duplicados de formularios o llamadas repetidas a APIs.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span>
+  <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"Click rapidly"</span>
+  <span class="code-attr">[debounceTime]</span><span class="code-bracket">=</span><span class="code-string">"500"</span>
+  <span class="code-attr">(clicked)</span><span class="code-bracket">=</span><span class="code-string">"onDebouncedClick()"</span>
+<span class="code-tag">&gt;&lt;/button-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <button-component
+        label="Click rapidly"
+        [debounceTime]="500"
+        (clicked)="onDebouncedClick()"
+        variant="secondary"
+      ></button-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">13. Custom Label Template</h2>
+    <p class="docs-section-desc">
+      Usa <code>labelTemplate</code> para reemplazar el texto por contenido personalizado (HTML, iconos, etc.). Pasa una referencia a un <code>ng-template</code>.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span>
+  <span class="code-attr">[labelTemplate]</span><span class="code-bracket">=</span><span class="code-string">"customLabel"</span>
+  <span class="code-attr">variant</span><span class="code-bracket">=</span><span class="code-string">"primary"</span>
+<span class="code-tag">&gt;&lt;/button-component&gt;</span>
+
+<span class="code-tag">&lt;ng-template</span> <span class="code-attr">#customLabel</span><span class="code-tag">&gt;</span>
+  <span class="code-tag">&lt;span</span> <span class="code-attr">class</span><span class="code-bracket">=</span><span class="code-string">"font-bold"</span><span class="code-tag">&gt;</span>Custom Label<span class="code-tag">&lt;/span&gt;</span>
+<span class="code-tag">&lt;/ng-template&gt;</span></code></pre>
+    </div>
+    <button-component [labelTemplate]="customLabel" variant="primary"></button-component>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">14. Analytics Tracking</h2>
+    <p class="docs-section-desc">
+      El input <code>trackingId</code> permite identificar clics para analytics. El componente registra en consola cuando se hace clic (puedes conectar esto a tu servicio de tracking).
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;button-component</span>
+  <span class="code-attr">label</span><span class="code-bracket">=</span><span class="code-string">"Track this click"</span>
+  <span class="code-attr">trackingId</span><span class="code-bracket">=</span><span class="code-string">"button-analytics-001"</span>
+  <span class="code-attr">variant</span><span class="code-bracket">=</span><span class="code-string">"primary"</span>
+<span class="code-tag">&gt;&lt;/button-component&gt;</span></code></pre>
+    </div>
+    <button-component label="Track this click" trackingId="button-analytics-001" variant="primary"></button-component>
+  </section>
+
+  <div class="mt-8">
+    <a routerLink="/" class="text-blue-600 underline">Volver</a>
+  </div>
+</section>
+
+<ng-template #iconHome>
+  <mat-icon>home</mat-icon>
+</ng-template>
+
+<ng-template #iconForward>
+  <mat-icon>chevron_right</mat-icon>
+</ng-template>
+
+<ng-template #iconSettings>
+  <mat-icon>settings</mat-icon>
+</ng-template>
+
+<ng-template #customLabel>
+  <span class="font-bold">Custom Label</span>
+</ng-template>

@@ -1,0 +1,15 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/arcangel-components",
+  "lib": {
+    "entryFile": "src/public-api.ts",
+    "flatModuleFile": "arcangel-components"
+  },
+  "assets": [
+    {
+      "glob": "README.md",
+      "input": ".",
+      "output": "."
+    }
+  ]
+}

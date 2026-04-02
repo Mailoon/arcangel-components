@@ -1,0 +1,75 @@
+<div class="paginator">
+  <div class="paginator__status">
+    @if (totalCount === 0) {
+      <span class="paginator__text">{{ mergedLabels().noRecords }}</span>
+    } @else {
+      <span class="paginator__text">
+        {{ mergedLabels().showing }}
+        {{ rangeStart }} - {{ rangeEnd }} {{ mergedLabels().of }} {{ totalCount }}
+        {{ mergedLabels().records }}
+      </span>
+    }
+  </div>
+
+  <div class="paginator__toolbar">
+    @if (showPageSize && totalCount > 0) {
+      <label class="paginator__page-size">
+        <span class="paginator__page-size-label">{{ mergedLabels().perPage }}</span>
+        <span class="paginator__select-wrap">
+          <searchable-select-component
+            class="paginator__page-size-select"
+            [items]="pageSizeItems"
+            [selectedValue]="pageSize"
+            [placeholder]="pageSize + ''"
+            variant="outline"
+            size="sm"
+            [ariaLabel]="mergedLabels().perPage"
+            (selectionChange)="onPageSizeSelected($event)"
+          ></searchable-select-component>
+        </span>
+      </label>
+    }
+
+    @if (totalCount > 0 && pageCount > 0) {
+      <div class="paginator__nav-wrap" #navWrap role="presentation">
+        <nav class="paginator__nav" role="navigation" aria-label="Paginación">
+          <button
+            type="button"
+            class="paginator__btn paginator__nav-btn"
+            [disabled]="!canPrev"
+            (click)="prev()"
+            aria-label="Página anterior"
+          >
+            &lt;
+          </button>
+          @for (entry of pageButtons; track $index) {
+            @if (entry === 'ellipsis') {
+              <span class="paginator__ellipsis" aria-hidden="true">…</span>
+            } @else {
+              <button
+                type="button"
+                class="paginator__btn paginator__nav-btn"
+                [class.paginator__nav-btn--active]="pageIndex === entry"
+                [disabled]="pageIndex === entry"
+                (click)="goToPage(entry)"
+                [attr.aria-label]="'Página ' + displayPageOneBased(entry)"
+                [attr.aria-current]="pageIndex === entry ? 'page' : null"
+              >
+                {{ displayPageOneBased(entry) }}
+              </button>
+            }
+          }
+          <button
+            type="button"
+            class="paginator__btn paginator__nav-btn"
+            [disabled]="!canNext"
+            (click)="next()"
+            aria-label="Página siguiente"
+          >
+            &gt;
+          </button>
+        </nav>
+      </div>
+    }
+  </div>
+</div>

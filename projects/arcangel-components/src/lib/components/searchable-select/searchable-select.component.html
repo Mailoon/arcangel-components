@@ -1,0 +1,118 @@
+<div
+  class="searchable-select-container"
+  [class.searchable-select-full-width]="fullWidth"
+  [class.searchable-select-open]="isOpen"
+  [class]="customClass"
+  (click)="handleTriggerClick($event)"
+>
+  <button-component
+    [label]="displayLabel"
+    [variant]="variant"
+    [shape]="shape"
+    [size]="size"
+    [fullWidth]="fullWidth"
+    [square]="square"
+    [disabled]="isDisabled"
+    [leftIconClass]="leftIconClass"
+    [rightIconClass]="rightIconClass"
+    [leftIconTemplate]="leftIconTemplate"
+    [rightIconTemplate]="rightIconTemplate ?? defaultChevron"
+    [backgroundClass]="backgroundClass"
+    [textClass]="textClass"
+    [borderClass]="borderClass"
+    [hoverClass]="hoverClass"
+    [ariaLabel]="ariaLabel"
+    [ariaDescribedBy]="ariaDescribedBy"
+    [ariaExpanded]="isOpen"
+    [tooltip]="tooltip"
+  ></button-component>
+
+  @if (isOpen) {
+    <div
+      class="searchable-select-panel"
+      [class]="placementClasses"
+      role="listbox"
+      [attr.aria-multiselectable]="multiple ? true : null"
+      (click)="$event.stopPropagation()"
+    >
+      @if (filterable) {
+        <div class="searchable-select-search-wrap">
+          <input
+            #searchInput
+            type="search"
+            class="searchable-select-search-input"
+            [value]="searchQuery"
+            (input)="onSearchInput($event)"
+            [placeholder]="searchPlaceholder"
+            (click)="$event.stopPropagation()"
+            autocomplete="off"
+            [attr.aria-label]="searchPlaceholder"
+          />
+        </div>
+      }
+      <div
+        #listEl
+        class="searchable-select-list"
+        (scroll)="onListScroll($event)"
+      >
+        @for (item of visibleItems; track $index) {
+          @if (item.divided && $index > 0) {
+            <div class="searchable-select-divider"></div>
+          }
+          <div
+            class="searchable-select-item"
+            [class.searchable-select-item-disabled]="item.disabled"
+            [class.searchable-select-item-focused]="isItemFocused($index)"
+            [class.searchable-select-item-divided]="item.divided"
+            [class.searchable-select-item--multi]="multiple"
+            role="option"
+            [attr.aria-disabled]="item.disabled"
+            [attr.aria-selected]="isItemSelected(item)"
+            (click)="selectItem(item, $event)"
+            (mouseenter)="onItemMouseEnter($index)"
+          >
+            @if (multiple) {
+              <span
+                class="searchable-select-check"
+                [class.searchable-select-check--on]="isItemSelected(item)"
+                aria-hidden="true"
+              ></span>
+            }
+            @if (itemTemplate) {
+              <ng-container
+                *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"
+              ></ng-container>
+            } @else {
+              @if (item.iconClass) {
+                <i [class]="item.iconClass" aria-hidden="true">{{ item.iconContent ?? '' }}</i>
+              }
+              <span class="searchable-select-item-label">{{ item.label }}</span>
+            }
+          </div>
+        }
+        @if (visibleItems.length === 0) {
+          <div class="searchable-select-empty" role="status">Sin resultados</div>
+        }
+        @if (loadingMore && visibleItems.length > 0) {
+          <div class="searchable-select-loading" role="status">Cargando…</div>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+<ng-template #defaultChevron>
+  <svg
+    class="searchable-select-chevron"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M6 9l6 6 6-6" />
+  </svg>
+</ng-template>

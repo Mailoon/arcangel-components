@@ -1,0 +1,71 @@
+button,
+a[role='link'] {
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.button-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-icon-left {
+  margin-right: 0.25rem;
+}
+
+.button-icon-right {
+  margin-left: 0.25rem;
+}
+
+.button-label {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Focus ring styles */
+button:focus,
+a[role='link']:focus {
+  outline: none;
+}
+
+button:focus-visible,
+a[role='link']:focus-visible {
+  outline-offset: 2px;
+}
+
+/* State transitions */
+button,
+a[role='link'] {
+  position: relative;
+}
+
+/* Loading state */
+button:disabled[data-state='loading'],
+a[role='link'][aria-busy='true'] {
+  pointer-events: none;
+}
+

@@ -1,0 +1,170 @@
+<section class="p-8">
+  <h1 class="text-3xl font-bold mb-6">Documentación - Stepper (Step By Step)</h1>
+
+  <p class="docs-intro">
+    El <code>stepper-component</code> es un componente de navegación paso a paso con barra de indicadores, botones configurables (Anterior, Siguiente, Cancelar), colores personalizables por estado y diseño responsive. El consumidor controla el contenido de cada paso y el índice actual. El host usa <code>flex: 1</code> y <code>align-self: stretch</code> para aprovechar el espacio del contenedor padre; el contenido proyectado va en un área con scroll interno para no desbordar el diseño. Coloca el stepper dentro de un padre con altura definida (p. ej. <code>flex flex-col min-h-[400px]</code>) si quieres que el cuerpo del paso ocupe el alto sobrante.
+  </p>
+
+  <section>
+    <h2 class="text-lg font-bold mb-4">1. Básico</h2>
+    <p class="docs-section-desc">
+      Stepper simple con tres pasos. Usa <code>currentStep</code> (índice 0-based) y emite <code>previousClicked</code>, <code>nextClicked</code>, <code>cancelClicked</code>. El padre controla qué contenido mostrar según el paso actual.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;stepper-component</span>
+  <span class="code-attr">[steps]</span><span class="code-bracket">=</span><span class="code-string">"steps"</span>
+  <span class="code-attr">[currentStep]</span><span class="code-bracket">=</span><span class="code-string">"currentStep()"</span>
+  <span class="code-attr">(previousClicked)</span><span class="code-bracket">=</span><span class="code-string">"currentStep.set(currentStep() - 1)"</span>
+  <span class="code-attr">(nextClicked)</span><span class="code-bracket">=</span><span class="code-string">"currentStep.set(currentStep() + 1)"</span>
+  <span class="code-attr">(cancelClicked)</span><span class="code-bracket">=</span><span class="code-string">"onCancel()"</span>
+<span class="code-tag">&gt;&lt;/stepper-component&gt;</span>
+
+<span class="code-tag">&lt;div</span> <span class="code-attr">*ngIf</span><span class="code-bracket">=</span><span class="code-string">"currentStep() === 0"</span><span class="code-tag">&gt;</span><span class="code-plain">Paso 1...</span><span class="code-tag">&lt;/div&gt;</span>
+<span class="code-tag">&lt;div</span> <span class="code-attr">*ngIf</span><span class="code-bracket">=</span><span class="code-string">"currentStep() === 1"</span><span class="code-tag">&gt;</span><span class="code-plain">Paso 2...</span><span class="code-tag">&lt;/div&gt;</span>
+<span class="code-tag">&lt;div</span> <span class="code-attr">*ngIf</span><span class="code-bracket">=</span><span class="code-string">"currentStep() === 2"</span><span class="code-tag">&gt;</span><span class="code-plain">Paso 3...</span><span class="code-tag">&lt;/div&gt;</span></code></pre>
+    </div>
+    <div class="border rounded-lg p-4 w-full max-w-full overflow-hidden flex flex-col min-h-[300px]">
+      <stepper-component
+        class="flex-1 min-h-0"
+        [steps]="steps"
+        [currentStep]="currentStep()"
+        [previousButton]="previousBtn"
+        [nextButton]="nextBtn"
+        [cancelButton]="cancelBtn"
+        (previousClicked)="currentStep.set(currentStep() - 1)"
+        (nextClicked)="currentStep.set(currentStep() + 1)"
+        (cancelClicked)="onCancel()"
+      >
+        <div class="py-4">
+          @if (currentStep() === 0) {
+            <p>Contenido del paso <strong>Información</strong>. Completa los datos básicos.</p>
+          }
+          @if (currentStep() === 1) {
+            <p>Contenido del paso <strong>Detalles</strong>. Aquí van los detalles adicionales.</p>
+          }
+          @if (currentStep() === 2) {
+            <p>Contenido del paso <strong>Confirmar</strong>. Revisa y confirma.</p>
+          }
+        </div>
+      </stepper-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">2. Colores personalizados</h2>
+    <p class="docs-section-desc">
+      <code>inactiveColor</code>, <code>inactiveBorderColor</code>, <code>activeColor</code>, <code>completedColor</code> para personalizar la apariencia.
+    </p>
+    <div class="border rounded-lg p-4 w-full max-w-full overflow-hidden">
+      <stepper-component
+        [steps]="steps"
+        [currentStep]="currentStepCustom()"
+        inactiveColor="#fef3c7"
+        inactiveBorderColor="#d97706"
+        activeColor="#7c3aed"
+        completedColor="#059669"
+        (previousClicked)="currentStepCustom.set(currentStepCustom() - 1)"
+        (nextClicked)="currentStepCustom.set(currentStepCustom() + 1)"
+        (cancelClicked)="onCancel()"
+      >
+        <div class="min-h-[80px] py-4">
+          <p> Paso {{ stepDisplay(currentStepCustom()) }} de {{ steps.length }}.</p>
+        </div>
+      </stepper-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">3. Iconos en steps completados</h2>
+    <p class="docs-section-desc">
+      Cada step puede tener <code>completedIconClass</code> y <code>completedIconContent</code> (ej: Material Icons) para mostrar un icono cuando el paso está completado.
+    </p>
+    <app-doc-highlighted-code
+      [code]="codeStepsWithIcons"
+      language="typescript"
+      ariaLabel="Código: steps con icono completado"
+    />
+    <div class="border rounded-lg p-4 w-full max-w-full overflow-hidden">
+      <stepper-component
+        [steps]="stepsWithIcons"
+        [currentStep]="currentStepIcons()"
+        (previousClicked)="currentStepIcons.set(currentStepIcons() - 1)"
+        (nextClicked)="currentStepIcons.set(currentStepIcons() + 1)"
+        (cancelClicked)="onCancel()"
+      >
+        <div class="min-h-[80px] py-4">
+          <p>Paso {{ stepDisplay(currentStepIcons()) }} con iconos en steps completados.</p>
+        </div>
+      </stepper-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">4. Templates en botones</h2>
+    <p class="docs-section-desc">
+      Los botones admiten <code>labelTemplate</code> con contexto <code>&#123; stepIndex, totalSteps &#125;</code> para personalizar el texto.
+    </p>
+    <ng-template #nextTpl let-ctx>
+      <span>{{ ctx.stepIndex >= ctx.totalSteps - 1 ? 'Finalizar' : 'Siguiente' }}</span>
+    </ng-template>
+    <div class="border rounded-lg p-4 w-full max-w-full overflow-hidden">
+      <stepper-component
+        [steps]="steps"
+        [currentStep]="currentStepTpl()"
+        [nextButton]="{ label: 'Siguiente', labelTemplate: nextTpl }"
+        (previousClicked)="currentStepTpl.set(currentStepTpl() - 1)"
+        (nextClicked)="currentStepTpl.set(currentStepTpl() + 1)"
+        (cancelClicked)="onCancel()"
+      >
+        <div class="min-h-[80px] py-4">
+          <p>El botón "Siguiente" cambia a "Finalizar" en el último paso.</p>
+        </div>
+      </stepper-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">5. Responsive y breakpoint</h2>
+    <p class="docs-section-desc">
+      En desktop los steps se muestran en fila horizontal; en móvil en columna. <code>breakpoint</code> puede ser <code>sm</code> (640px), <code>md</code> (768px) o <code>lg</code> (1024px). Redimensiona la ventana para ver el cambio.
+    </p>
+    <div class="border rounded-lg p-4 w-full max-w-full overflow-hidden">
+      <stepper-component
+        [steps]="steps"
+        [currentStep]="currentStep()"
+        breakpoint="md"
+        (previousClicked)="currentStep.set(currentStep() - 1)"
+        (nextClicked)="currentStep.set(currentStep() + 1)"
+        (cancelClicked)="onCancel()"
+      >
+        <div class="min-h-[80px] py-4">
+          <p>Layout horizontal en pantallas ≥768px, vertical en pantallas menores.</p>
+        </div>
+      </stepper-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">6. Sin botón Cancelar</h2>
+    <p class="docs-section-desc">
+      <code>showCancelButton="false"</code> oculta el botón Cancelar.
+    </p>
+    <div class="border rounded-lg p-4 w-full max-w-full overflow-hidden">
+      <stepper-component
+        [steps]="steps"
+        [currentStep]="currentStep()"
+        [showCancelButton]="false"
+        (previousClicked)="currentStep.set(currentStep() - 1)"
+        (nextClicked)="currentStep.set(currentStep() + 1)"
+      >
+        <div class="min-h-[80px] py-4">
+          <p>Stepper sin botón Cancelar.</p>
+        </div>
+      </stepper-component>
+    </div>
+  </section>
+
+  <div class="mt-8">
+    <a routerLink="/" class="text-blue-600 underline">Volver</a>
+  </div>
+</section>

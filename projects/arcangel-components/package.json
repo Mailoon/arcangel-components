@@ -1,0 +1,21 @@
+{
+  "name": "arcangel-components",
+  "version": "1.0.0",
+  "description": "Componentes UI reutilizables para Angular (botón, input, date picker, tabla, stepper, select, etc.).",
+  "license": "UNLICENSED",
+  "peerDependencies": {
+    "@angular/common": ">=19.0.0 <23.0.0",
+    "@angular/core": ">=19.0.0 <23.0.0",
+    "@angular/forms": ">=19.0.0 <23.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false,
+  "files": [
+    "README.md",
+    "fesm2022/arcangel-components.mjs",
+    "fesm2022/arcangel-components.mjs.map",
+    "types/arcangel-components.d.ts"
+  ]
+}

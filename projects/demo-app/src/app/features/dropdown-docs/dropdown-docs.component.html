@@ -1,0 +1,355 @@
+<section class="p-8">
+  <h1 class="text-3xl font-bold mb-6">Documentación - Searchable Select</h1>
+
+  <p class="docs-intro">
+    El <code>searchable-select-component</code> es el control estándar de lista desplegable del kit: usa <code>button-component</code> como disparador, comparte variantes/tamaños/formas con el botón y admite <code>items</code> tipo <code>DropdownItem</code>. Opcionalmente puedes activar búsqueda delegada al padre (<code>filterable</code>), lazy load al scroll y <code>formControl</code> (CVA). Eventos: <code>selectionChange</code>, <code>opened</code>, <code>closed</code>. Cierre al hacer clic fuera, teclado y chevron animado. El <code>dropdown-component</code> sigue disponible en la librería para menús de acciones puros si lo necesitas.
+  </p>
+
+  <section>
+    <h2 class="text-lg font-bold mb-4">1. Básico</h2>
+    <p class="docs-section-desc">
+      Un select mínimo requiere <code>items</code> (array de objetos con <code>label</code> y opcionalmente <code>value</code>) y <code>placeholder</code>. El evento <code>(selectionChange)</code> emite el item elegido.
+    </p>
+    <app-doc-highlighted-code [code]="codeBasic" language="markup" ariaLabel="Código: select básico" />
+    <div class="flex gap-4 flex-wrap">
+      <searchable-select-component
+        placeholder="Elegir opción..."
+        [items]="basicItems"
+        (selectionChange)="onItemSelected($event)"
+      ></searchable-select-component>
+      @if (selectedItem(); as sel) {
+        <span class="text-sm text-gray-600 self-center">Seleccionado: {{ sel.label }}</span>
+      }
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">2. Variantes de Color</h2>
+    <p class="docs-section-desc">
+      Las mismas variantes del botón: <code>primary</code>, <code>secondary</code>, <code>outline</code>, <code>ghost</code>, <code>danger</code>, <code>warning</code>, <code>success</code>. Afectan solo al trigger.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;searchable-select-component</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+  <span class="code-attr">variant</span><span class="code-bracket">=</span><span class="code-string">"primary"</span>
+  <span class="code-attr">placeholder</span><span class="code-bracket">=</span><span class="code-string">"Primary"</span>
+<span class="code-tag">&gt;&lt;/searchable-select-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <searchable-select-component
+        [items]="basicItems"
+        variant="primary"
+        placeholder="Primary"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        variant="secondary"
+        placeholder="Secondary"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        variant="outline"
+        placeholder="Outline"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        variant="ghost"
+        placeholder="Ghost"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        variant="danger"
+        placeholder="Danger"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        variant="warning"
+        placeholder="Warning"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        variant="success"
+        placeholder="Success"
+      ></searchable-select-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">3. Tamaños</h2>
+    <p class="docs-section-desc">
+      <code>size</code> acepta <code>sm</code>, <code>md</code> o <code>lg</code>, igual que el botón. Define el tamaño del trigger.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;searchable-select-component</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+  <span class="code-attr">size</span><span class="code-bracket">=</span><span class="code-string">"sm"</span>
+  <span class="code-attr">placeholder</span><span class="code-bracket">=</span><span class="code-string">"Small"</span>
+<span class="code-tag">&gt;&lt;/searchable-select-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap items-center">
+      <searchable-select-component
+        [items]="basicItems"
+        size="sm"
+        placeholder="Small"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        size="md"
+        placeholder="Medium"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        size="lg"
+        placeholder="Large"
+      ></searchable-select-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">4. Shapes</h2>
+    <p class="docs-section-desc">
+      <code>shape</code> puede ser <code>rounded</code>, <code>pill</code> o <code>square</code>. Controla la forma del trigger.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;searchable-select-component</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+  <span class="code-attr">shape</span><span class="code-bracket">=</span><span class="code-string">"pill"</span>
+  <span class="code-attr">placeholder</span><span class="code-bracket">=</span><span class="code-string">"Pill"</span>
+<span class="code-tag">&gt;&lt;/searchable-select-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <searchable-select-component
+        [items]="basicItems"
+        shape="rounded"
+        placeholder="Rounded"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        shape="pill"
+        placeholder="Pill"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        shape="square"
+        placeholder="Square"
+      ></searchable-select-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">5. Con iconos</h2>
+    <p class="docs-section-desc">
+      Los items pueden tener <code>iconClass</code> e <code>iconContent</code> (ej. Material Icons). El trigger admite <code>leftIconTemplate</code> o <code>rightIconTemplate</code>. Por defecto muestra un chevron a la derecha que rota al abrir.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;searchable-select-component</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"itemsWithIcons"</span>
+  <span class="code-attr">[leftIconTemplate]</span><span class="code-bracket">=</span><span class="code-string">"iconHome"</span>
+  <span class="code-attr">placeholder</span><span class="code-bracket">=</span><span class="code-string">"Con icono"</span>
+<span class="code-tag">&gt;&lt;/searchable-select-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <searchable-select-component
+        [items]="itemsWithIcons"
+        placeholder="Menú con iconos"
+        variant="outline"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        [leftIconTemplate]="iconHome"
+        placeholder="Con icono izquierdo"
+        [backgroundClass]="'bg-slate-700'"
+        [textClass]="'text-white'"
+      ></searchable-select-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">6. Placement</h2>
+    <p class="docs-section-desc">
+      <code>placement</code> define la posición del panel: <code>bottom-start</code>, <code>bottom-end</code>, <code>top-start</code>, <code>top-end</code>. Útil cuando el control está cerca de bordes.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;searchable-select-component</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+  <span class="code-attr">placement</span><span class="code-bracket">=</span><span class="code-string">"bottom-end"</span>
+  <span class="code-attr">placeholder</span><span class="code-bracket">=</span><span class="code-string">"bottom-end"</span>
+<span class="code-tag">&gt;&lt;/searchable-select-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <searchable-select-component
+        [items]="basicItems"
+        placement="bottom-start"
+        placeholder="bottom-start"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        placement="bottom-end"
+        placeholder="bottom-end"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        placement="top-start"
+        placeholder="top-start"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="basicItems"
+        placement="top-end"
+        placeholder="top-end"
+      ></searchable-select-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">7. Full Width</h2>
+    <p class="docs-section-desc">
+      <code>[fullWidth]="true"</code> hace que el trigger ocupe el 100% del ancho del contenedor.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;searchable-select-component</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+  <span class="code-attr">[fullWidth]</span><span class="code-bracket">=</span><span class="code-string">"true"</span>
+  <span class="code-attr">placeholder</span><span class="code-bracket">=</span><span class="code-string">"Select ancho completo"</span>
+<span class="code-tag">&gt;&lt;/searchable-select-component&gt;</span></code></pre>
+    </div>
+    <searchable-select-component
+      [items]="basicItems"
+      [fullWidth]="true"
+      placeholder="Select ancho completo"
+    ></searchable-select-component>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">8. Items con iconos y dividers</h2>
+    <p class="docs-section-desc">
+      Cada item puede tener <code>iconClass</code>, <code>iconContent</code> y <code>divided: true</code> para mostrar un separador antes. Útil para menús con secciones.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code>items = [
+  &#123; label: 'Perfil' &#125;,
+  &#123; label: 'Configuración' &#125;,
+  &#123; label: 'Cerrar sesión', divided: true &#125;
+];</code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <searchable-select-component
+        [items]="itemsWithIcons"
+        placeholder="Iconos"
+        variant="secondary"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="itemsWithDividers"
+        placeholder="Con separadores"
+        variant="outline"
+      ></searchable-select-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">9. Disabled state</h2>
+    <p class="docs-section-desc">
+      <code>[disabled]="true"</code> deshabilita el trigger completo. Cada item puede tener <code>disabled: true</code> para deshabilitarlo individualmente.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;searchable-select-component</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+  <span class="code-attr">[disabled]</span><span class="code-bracket">=</span><span class="code-string">"true"</span>
+  <span class="code-attr">placeholder</span><span class="code-bracket">=</span><span class="code-string">"Deshabilitado"</span>
+<span class="code-tag">&gt;&lt;/searchable-select-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <searchable-select-component
+        [items]="basicItems"
+        [disabled]="true"
+        placeholder="Deshabilitado"
+      ></searchable-select-component>
+      <searchable-select-component
+        [items]="itemsWithDisabled"
+        placeholder="Items con disabled"
+        variant="secondary"
+      ></searchable-select-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">10. Accesibilidad + Tooltip</h2>
+    <p class="docs-section-desc">
+      Usa <code>ariaLabel</code> y <code>tooltip</code> para lectores de pantalla y contexto al pasar el cursor.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;searchable-select-component</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+  <span class="code-attr">ariaLabel</span><span class="code-bracket">=</span><span class="code-string">"Menú de opciones accesible"</span>
+  <span class="code-attr">tooltip</span><span class="code-bracket">=</span><span class="code-string">"Abre el menú de opciones"</span>
+<span class="code-tag">&gt;&lt;/searchable-select-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap">
+      <searchable-select-component
+        [items]="basicItems"
+        placeholder="Elegir opción"
+        ariaLabel="Menú de opciones accesible"
+        tooltip="Abre el menú de opciones"
+      ></searchable-select-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">11. Custom item template</h2>
+    <p class="docs-section-desc">
+      Con <code>itemTemplate</code> defines cómo se renderiza cada item. La plantilla recibe el item como <code>$implicit</code> (ej. <code>let-item</code>).
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;searchable-select-component</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+  <span class="code-attr">[itemTemplate]</span><span class="code-bracket">=</span><span class="code-string">"customItemTpl"</span>
+<span class="code-tag">&gt;&lt;/searchable-select-component&gt;</span>
+
+<span class="code-tag">&lt;ng-template</span> <span class="code-attr">#customItemTpl</span> <span class="code-attr">let-item</span><span class="code-tag">&gt;</span>
+  <span class="code-tag">&lt;span</span> <span class="code-attr">class</span><span class="code-bracket">=</span><span class="code-string">"font-bold"</span><span class="code-tag">&gt;</span>&#123;&#123; item.label &#125;&#125;<span class="code-tag">&lt;/span&gt;</span>
+<span class="code-tag">&lt;/ng-template&gt;</span></code></pre>
+    </div>
+    <searchable-select-component
+      [items]="basicItems"
+      [itemTemplate]="customItemTpl"
+      placeholder="Template personalizado"
+      variant="primary"
+    ></searchable-select-component>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">12. Eventos (selectionChange, opened, closed)</h2>
+    <p class="docs-section-desc">
+      <code>(selectionChange)</code> emite el item elegido. <code>(opened)</code> y <code>(closed)</code> se disparan al abrir y cerrar el panel. Útil para analytics o lógica condicional.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;searchable-select-component</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+  <span class="code-attr">(selectionChange)</span><span class="code-bracket">=</span><span class="code-string">"onItemSelected($event)"</span>
+  <span class="code-attr">(opened)</span><span class="code-bracket">=</span><span class="code-string">"onOpened()"</span>
+  <span class="code-attr">(closed)</span><span class="code-bracket">=</span><span class="code-string">"onClosed()"</span>
+<span class="code-tag">&gt;&lt;/searchable-select-component&gt;</span></code></pre>
+    </div>
+    <div class="flex gap-4 flex-wrap items-center">
+      <searchable-select-component
+        [items]="basicItems"
+        placeholder="Abrir para ver eventos"
+        (selectionChange)="onItemSelected($event)"
+        (opened)="onOpened()"
+        (closed)="onClosed()"
+      ></searchable-select-component>
+      <span class="text-sm text-gray-600">Último evento: <strong>{{ lastEvent() }}</strong></span>
+    </div>
+  </section>
+
+  <div class="mt-8">
+    <a routerLink="/" class="text-blue-600 underline">Volver</a>
+  </div>
+</section>
+
+<ng-template #iconHome>
+  <mat-icon>home</mat-icon>
+</ng-template>
+
+<ng-template #customItemTpl let-item>
+  <span class="font-bold text-blue-600">{{ item.label }}</span>
+</ng-template>

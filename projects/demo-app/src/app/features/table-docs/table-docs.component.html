@@ -1,0 +1,172 @@
+<section class="p-8">
+  <h1 class="text-3xl font-bold mb-6">Documentación - Table, Card y Table-Responsive</h1>
+
+  <p class="docs-intro">
+    Tres componentes para mostrar datos tabulares: <code>table-component</code> (tabla HTML estándar), <code>card-component</code> (vista key-value en cards) y <code>table-responsive-component</code> (usa ambos según el breakpoint). Todos reciben <code>headers</code>, <code>items</code> y <code>actions</code> con soporte para iconos y callbacks. La paginación opcional (<code>showPagination</code>, modos <code>client</code> y <code>server</code>) usa el componente independiente <code>paginator-component</code> (también selector legacy <code>table-pagination-bar</code>): texto de rango, selector de tamaño de página y números de página que se adaptan al ancho disponible (<code>ResizeObserver</code>): si caben, muestra todas; si no, primera, vecinos de la actual, última y <code>…</code>. El tope de vecinos se limita con <code>siblingDelta</code>.
+  </p>
+
+  <section>
+    <h2 class="text-lg font-bold mb-4">1. Table - Básico</h2>
+    <p class="docs-section-desc">
+      Tabla con encabezados y filas. Los <code>headers</code> definen las columnas (key + label). Los <code>items</code> son objetos cuyas keys coinciden con los headers.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;table-component</span>
+  <span class="code-attr">[headers]</span><span class="code-bracket">=</span><span class="code-string">"headers"</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+<span class="code-tag">&gt;&lt;/table-component&gt;</span></code></pre>
+    </div>
+    <table-component [headers]="headers" [items]="items"></table-component>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">2. Table - Con acciones (iconos)</h2>
+    <p class="docs-section-desc">
+      Acciones por fila con iconos. Cada acción emite <code>actionClicked</code> con <code>actionId</code>, <code>item</code> e <code>index</code>.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;table-component</span>
+  <span class="code-attr">[headers]</span><span class="code-bracket">=</span><span class="code-string">"headers"</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+  <span class="code-attr">[actions]</span><span class="code-bracket">=</span><span class="code-string">"actionsWithIcons"</span>
+  <span class="code-attr">(actionClicked)</span><span class="code-bracket">=</span><span class="code-string">"onAction($event)"</span>
+<span class="code-tag">&gt;&lt;/table-component&gt;</span></code></pre>
+    </div>
+    <div class="space-y-2">
+      <table-component
+        [headers]="headers"
+        [items]="items"
+        [actions]="actionsWithIcons"
+        (actionClicked)="onAction($event)"
+      ></table-component>
+      <p class="text-sm text-gray-600">Última acción: <strong>{{ lastAction() }}</strong></p>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">3. Table - Acciones con labels y striped</h2>
+    <p class="docs-section-desc">
+      Acciones con texto. <code>actionsPosition</code> ubica la columna de acciones al inicio o final. <code>striped</code> alterna colores de filas.
+    </p>
+    <app-doc-highlighted-code [code]="codeStriped" language="markup" ariaLabel="Código: tabla striped" />
+    <table-component
+      [headers]="headers"
+      [items]="items"
+      [actions]="actionsWithLabels"
+      [actionsPosition]="'start'"
+      [striped]="true"
+      (actionClicked)="onAction($event)"
+    ></table-component>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">4. Card - Vista key-value</h2>
+    <p class="docs-section-desc">
+      Una card por cada item. Muestra pares label: valor. Los headers con <code>hiddenOnCard: true</code> no se muestran en la vista card.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;card-component</span>
+  <span class="code-attr">[headers]</span><span class="code-bracket">=</span><span class="code-string">"headers"</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+  <span class="code-attr">[actions]</span><span class="code-bracket">=</span><span class="code-string">"actions"</span>
+  <span class="code-attr">[actionsPosition]</span><span class="code-bracket">=</span><span class="code-string">"'end'"</span>
+<span class="code-tag">&gt;&lt;/card-component&gt;</span></code></pre>
+    </div>
+    <div class="max-w-md">
+      <card-component
+        [headers]="headers"
+        [items]="items"
+        [actions]="actionsWithIcons"
+        [actionsPosition]="'end'"
+        (actionClicked)="onAction($event)"
+      ></card-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">5. Table - Paginación (modo cliente)</h2>
+    <p class="docs-section-desc">
+      Con <code>showPagination</code> y <code>paginationMode="client"</code> el componente rebanará <code>items</code> según <code>pageIndex</code> y <code>pageSize</code>. El texto muestra el rango visible y el total. <code>(paginationChange)</code> actualiza el estado en el padre. El <code>index</code> en <code>actionClicked</code> es el de la página actual; para el índice global usa <code>pageIndex * pageSize + index</code>.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;table-component</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"manyItems"</span>
+  <span class="code-attr">showPagination</span>
+  <span class="code-attr">paginationMode</span><span class="code-bracket">=</span><span class="code-string">"client"</span>
+  <span class="code-attr">[pageIndex]</span><span class="code-bracket">=</span><span class="code-string">"pageIndex()"</span>
+  <span class="code-attr">[pageSize]</span><span class="code-bracket">=</span><span class="code-string">"pageSize()"</span>
+  <span class="code-attr">(paginationChange)</span><span class="code-bracket">=</span><span class="code-string">"onPagination($event)"</span>
+<span class="code-tag">/&gt;</span></code></pre>
+    </div>
+    <div class="border rounded-lg p-4 w-full max-w-full">
+      <table-component
+        [headers]="headers"
+        [items]="manyItems"
+        [actions]="actionsWithIcons"
+        [showPagination]="true"
+        paginationMode="client"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="[5, 10, 25]"
+        (actionClicked)="onActionPaginated($event)"
+        (paginationChange)="onPagination($event)"
+      ></table-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">6. Table-Responsive - Paginación</h2>
+    <p class="docs-section-desc">
+      Una sola barra de paginación debajo; tabla y cards comparten el mismo subconjunto de filas. Misma API que la tabla.
+    </p>
+    <div class="border rounded-lg p-4 w-full max-w-full">
+      <table-responsive-component
+        [headers]="headers"
+        [items]="manyItems"
+        [actions]="actionsWithIcons"
+        [showPagination]="true"
+        paginationMode="client"
+        [pageIndex]="pageIndexResponsive()"
+        [pageSize]="pageSizeResponsive()"
+        [pageSizeOptions]="[5, 10, 25]"
+        breakpoint="md"
+        (actionClicked)="onAction($event)"
+        (paginationChange)="onPaginationResponsive($event)"
+      ></table-responsive-component>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">7. Modo servidor (nota)</h2>
+    <p class="docs-section-desc">
+      Con <code>paginationMode="server"</code> pasas en <code>items</code> solo la página actual y defines <code>totalCount</code> con el total del API. El padre debe cargar datos al cambiar <code>(paginationChange)</code>.
+    </p>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">8. Table-Responsive (sin paginación)</h2>
+    <p class="docs-section-desc">
+      Muestra tabla en desktop y cards en móvil. <code>breakpoint</code> puede ser <code>sm</code> (640px), <code>md</code> (768px) o <code>lg</code> (1024px). Redimensiona la ventana para ver el cambio.
+    </p>
+    <div class="docs-code-block" ngNonBindable>
+      <pre><code><span class="code-tag">&lt;table-responsive-component</span>
+  <span class="code-attr">[headers]</span><span class="code-bracket">=</span><span class="code-string">"headers"</span>
+  <span class="code-attr">[items]</span><span class="code-bracket">=</span><span class="code-string">"items"</span>
+  <span class="code-attr">[actions]</span><span class="code-bracket">=</span><span class="code-string">"actions"</span>
+  <span class="code-attr">breakpoint</span><span class="code-bracket">=</span><span class="code-string">"md"</span>
+  <span class="code-attr">(actionClicked)</span><span class="code-bracket">=</span><span class="code-string">"onAction($event)"</span>
+<span class="code-tag">&gt;&lt;/table-responsive-component&gt;</span></code></pre>
+    </div>
+    <table-responsive-component
+      [headers]="headers"
+      [items]="items"
+      [actions]="actionsWithIcons"
+      breakpoint="md"
+      (actionClicked)="onAction($event)"
+    ></table-responsive-component>
+  </section>
+
+  <div class="mt-8">
+    <a routerLink="/" class="text-blue-600 underline">Volver</a>
+  </div>
+</section>

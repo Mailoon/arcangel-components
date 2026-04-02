@@ -1,0 +1,32 @@
+:host {
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.input-component__wrap {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.input-component__field {
+  box-sizing: border-box;
+  min-height: 1.25em;
+}
+
+.input-component__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125em;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.input-component__icon--left {
+  margin-right: -0.125rem;
+}
+
+.input-component__icon--right {
+  margin-left: -0.125rem;
+}

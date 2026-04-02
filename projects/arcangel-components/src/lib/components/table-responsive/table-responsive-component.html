@@ -1,0 +1,41 @@
+<div
+  class="table-responsive-container"
+  [class.table-responsive-sm]="breakpoint === 'sm'"
+  [class.table-responsive-md]="breakpoint === 'md'"
+  [class.table-responsive-lg]="breakpoint === 'lg'"
+  [class]="customClass"
+>
+  <div class="table-responsive-desktop">
+    <table-component
+      [headers]="headers"
+      [items]="displayItems"
+      [actions]="actions"
+      [actionsPosition]="actionsPosition"
+      [emptyMessage]="emptyMessage"
+      [striped]="striped"
+      [showPagination]="false"
+      (actionClicked)="actionClicked.emit($event)"
+    />
+  </div>
+  <div class="table-responsive-mobile">
+    <card-component
+      [headers]="headers"
+      [items]="displayItems"
+      [actions]="actions"
+      [actionsPosition]="actionsPosition"
+      [emptyMessage]="emptyMessage"
+      [showPagination]="false"
+      (actionClicked)="actionClicked.emit($event)"
+    />
+  </div>
+  @if (showPagination) {
+    <paginator-component
+      [totalCount]="resolvedTotalCount"
+      [pageIndex]="effectivePageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [labels]="paginationLabels"
+      (paginationChange)="paginationChange.emit($event)"
+    />
+  }
+</div>

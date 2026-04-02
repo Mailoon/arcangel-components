@@ -1,0 +1,114 @@
+<section class="p-8">
+  <h1 class="text-3xl font-bold mb-6">Documentación - Searchable Select</h1>
+
+  <p class="docs-intro">
+    El <code>searchable-select-component</code> muestra <code>items</code> que envía el padre. Con <code>multiple</code> el valor del control es un <strong>array</strong> de <code>value</code>; el panel no se cierra al elegir (salvo que pongas <code>[closeOnSelect]</code> explícito). El campo de búsqueda solo aparece con <code>filterable</code>; el filtrado lo implementa el padre escuchando <code>(filterQueryChange)</code> (debounce 300&nbsp;ms). La carga de más opciones es tipo <strong>lazy load</strong>: al hacer scroll cerca del final se emite <code>(loadMore)</code> si <code>hasMore</code> es true; usa <code>loadingMore</code> mientras traes datos. Mismo disparador que el dropdown (<code>ButtonComponent</code>), tipo <code>DropdownItem</code> y soporte CVA.
+  </p>
+
+  <section>
+    <h2 class="text-lg font-bold mb-4">1. Básico (sin buscar ni lazy)</h2>
+    <p class="docs-section-desc">
+      Sin <code>filterable</code> no hay input de búsqueda. Sin <code>hasMore</code> no hay carga al scroll.
+    </p>
+    <app-doc-highlighted-code [code]="code.basic" language="markup" ariaLabel="Código: select básico" />
+    <div class="flex flex-wrap gap-4 items-center">
+      <searchable-select-component
+        placeholder="Elegir..."
+        [items]="basicItems"
+        [selectedValue]="'a'"
+        (selectionChange)="onSelection($event)"
+      ></searchable-select-component>
+      @if (lastSelection()) {
+        <span class="text-sm text-gray-600">Última selección: {{ lastSelection() }}</span>
+      }
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">2. Lazy load (scroll)</h2>
+    <p class="docs-section-desc">
+      El padre mantiene la ventana acumulada en <code>items</code>. Con <code>[hasMore]</code> y <code>(loadMore)</code> pides el siguiente lote. Mientras cargas, <code>[loadingMore]</code> evita disparos repetidos y muestra “Cargando…”.
+    </p>
+    <app-doc-highlighted-code [code]="code.lazy" language="markup" ariaLabel="Código: lazy load" />
+    <searchable-select-component
+      placeholder="Scroll para cargar más…"
+      [items]="lazyItems()"
+      [hasMore]="lazyHasMore()"
+      [loadingMore]="lazyLoadingMore()"
+      (loadMore)="onLazyLoadMore()"
+      variant="outline"
+    ></searchable-select-component>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">3. Filtro delegado al padre</h2>
+    <p class="docs-section-desc">
+      Con <code>filterable</code> se muestra el buscador; cada cambio (tras debounce) emite <code>filterQueryChange</code>. El padre actualiza <code>[items]</code> con su propia lógica.
+    </p>
+    <app-doc-highlighted-code [code]="code.filter" language="markup" ariaLabel="Código: filtro delegado" />
+    <searchable-select-component
+      placeholder="Filtrar usuarios…"
+      [items]="filteredItems()"
+      [filterable]="true"
+      searchPlaceholder="Escribe para filtrar…"
+      (filterQueryChange)="onFilterQuery($event)"
+      variant="secondary"
+    ></searchable-select-component>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">4. Formulario reactivo (CVA)</h2>
+    <p class="docs-section-desc">
+      <code>[formControl]</code>; el valor es el <code>value</code> del <code>DropdownItem</code>.
+    </p>
+    <p class="text-sm text-gray-600 mb-1">TypeScript</p>
+    <app-doc-highlighted-code [code]="code.formTs" language="typescript" ariaLabel="Código: FormControl select" />
+    <p class="text-sm text-gray-600 mb-1 mt-3">Plantilla</p>
+    <app-doc-highlighted-code [code]="code.formTpl" language="markup" ariaLabel="Código: formControl en select" />
+    <div class="flex flex-wrap gap-4 items-center">
+      <searchable-select-component
+        placeholder="Control..."
+        [items]="basicItems"
+        [formControl]="selectControl"
+      ></searchable-select-component>
+      <span class="text-sm text-gray-600">Valor del control: <strong>{{ selectControl.value }}</strong></span>
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">5. Multiselección</h2>
+    <p class="docs-section-desc">
+      <code>[multiple]="true"</code>; <code>formControl.value</code> es <code>unknown[]</code> (ej. <code>string[]</code>). <code>(selectionChange)</code> sigue emitiendo el ítem pulsado (para alternar). Resumen en el botón con <code>maxSummaryLabels</code> y <code>moreSelectedLabel</code>.
+    </p>
+    <p class="text-sm text-gray-600 mb-1">TypeScript</p>
+    <app-doc-highlighted-code [code]="code.multiTs" language="typescript" ariaLabel="Código: multiselect control" />
+    <p class="text-sm text-gray-600 mb-1 mt-3">Plantilla</p>
+    <app-doc-highlighted-code [code]="code.multiTpl" language="markup" ariaLabel="Código: multiselect" />
+    <div class="flex flex-col gap-2 max-w-xl">
+      <searchable-select-component
+        placeholder="Elige varias…"
+        [items]="basicItems"
+        [multiple]="true"
+        [formControl]="multiSelectControl"
+        variant="outline"
+      ></searchable-select-component>
+      <span class="text-sm text-gray-600"
+        >Valor: <strong>{{ multiSelectControl.value | json }}</strong></span
+      >
+    </div>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-bold mb-4">6. Deshabilitado</h2>
+    <app-doc-highlighted-code [code]="code.disabled" language="markup" ariaLabel="Código: select deshabilitado" />
+    <searchable-select-component
+      placeholder="No disponible"
+      [items]="basicItems"
+      [disabled]="true"
+    ></searchable-select-component>
+  </section>
+
+  <div class="mt-8">
+    <a routerLink="/" class="text-blue-600 underline">Volver</a>
+  </div>
+</section>

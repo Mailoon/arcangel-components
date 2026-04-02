@@ -1,0 +1,57 @@
+.docs-intro {
+  max-width: 48rem;
+  line-height: 1.6;
+}
+
+kbd {
+  padding: 0.1rem 0.35rem;
+  font-size: 0.8em;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  background: #f9fafb;
+}
+
+.doc-card {
+  padding: 1rem 1.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background: #fafafa;
+}
+
+.doc-table-wrap {
+  overflow-x: auto;
+}
+
+.doc-table {
+  width: 100%;
+  font-size: 0.875rem;
+  border-collapse: collapse;
+}
+
+.doc-table th,
+.doc-table td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: top;
+}
+
+.doc-table th {
+  font-weight: 600;
+  color: #374151;
+  width: 11rem;
+}
+
+.doc-table-section {
+  font-weight: 600;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.doc-table code {
+  font-size: 0.8125rem;
+}

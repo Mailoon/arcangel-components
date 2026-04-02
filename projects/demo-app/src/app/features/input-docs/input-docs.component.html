@@ -1,0 +1,178 @@
+<section class="p-8">
+  <h1 class="text-3xl font-bold mb-2">Documentación — Input</h1>
+  <p class="text-gray-600 mb-6">
+    Misma línea visual que el botón: colores (<code>variant</code>), tamaño (<code>size</code>), ancho (<code>fullWidth</code>),
+    iconos y overrides Tailwind. El borde redondeado va en <code>shape</code> (predefinido) o en <code>shapeClass</code> (cualquier
+    clase Tailwind). Implementa <code>ControlValueAccessor</code> para <code>[formControl]</code> / <code>formControlName</code>.
+  </p>
+
+  <section class="doc-card mb-8">
+    <h2 class="text-lg font-bold mb-3">API resumida</h2>
+    <div class="doc-table-wrap">
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Input</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>variant</code></td>
+            <td><code>primary</code> | <code>secondary</code> | <code>outline</code> | <code>ghost</code> | <code>danger</code> | <code>warning</code> | <code>success</code></td>
+          </tr>
+          <tr>
+            <td><code>shape</code></td>
+            <td
+              ><code>rounded</code> | <code>rounded-md</code> | <code>rounded-lg</code> | <code>pill</code> |
+              <code>square</code> — preset de redondeo del contenedor</td
+            >
+          </tr>
+          <tr>
+            <td><code>shapeClass</code></td>
+            <td>Si tiene valor, <strong>sustituye</strong> el redondeo de <code>shape</code> (ej. <code>rounded-2xl</code>, <code>rounded-t-xl</code>).</td>
+          </tr>
+          <tr>
+            <td><code>size</code></td>
+            <td><code>sm</code> | <code>md</code> | <code>lg</code></td>
+          </tr>
+          <tr>
+            <td><code>leftIconClass</code> / <code>rightIconClass</code></td>
+            <td>Clases del <code>&lt;i&gt;</code>; <code>leftIconContent</code> / <code>rightIconContent</code> = texto (Material Icons).</td>
+          </tr>
+          <tr>
+            <td><code>leftIconTemplate</code> / <code>rightIconTemplate</code></td>
+            <td><code>TemplateRef</code> para iconos (p. ej. <code>mat-icon</code>).</td>
+          </tr>
+          <tr>
+            <td><code>backgroundClass</code>, <code>textClass</code>, <code>borderClass</code>, <code>hoverClass</code>, <code>customClass</code></td>
+            <td>Capas Tailwind extra sobre el wrapper.</td>
+          </tr>
+          <tr>
+            <td><code>placeholder</code>, <code>type</code>, <code>inputId</code>, <code>name</code>, <code>readOnly</code>, <code>maxlength</code>, <code>autocomplete</code>, <code>inputMode</code></td>
+            <td>Se pasan al <code>&lt;input&gt;</code> nativo.</td>
+          </tr>
+          <tr>
+            <td><code>disabled</code>, <code>ariaLabel</code>, <code>ariaDescribedBy</code>, <code>tooltip</code></td>
+            <td>Estado y accesibilidad.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">1. Variantes de color</h2>
+    <app-doc-highlighted-code [code]="code.variants" language="markup" ariaLabel="Código: variantes" />
+    <div class="flex flex-col gap-4 max-w-xl mt-4">
+      <input-component placeholder="Outline (por defecto)" variant="outline" [fullWidth]="true"></input-component>
+      <input-component placeholder="Primary" variant="primary" [fullWidth]="true"></input-component>
+      <input-component placeholder="Ghost" variant="ghost" [fullWidth]="true"></input-component>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">2. Formas y redondeo (<code>shape</code>)</h2>
+    <p class="text-sm text-gray-600 mb-2">El contenedor usa <code>overflow-hidden</code> para que el fondo respete el radio en las esquinas.</p>
+    <app-doc-highlighted-code [code]="code.shapes" language="markup" ariaLabel="Código: shape" />
+    <div class="flex flex-col gap-3 max-w-xl mt-4">
+      <input-component placeholder="rounded (4px)" shape="rounded" variant="outline" [fullWidth]="true"></input-component>
+      <input-component placeholder="rounded-md" shape="rounded-md" variant="outline" [fullWidth]="true"></input-component>
+      <input-component placeholder="rounded-lg" shape="rounded-lg" variant="outline" [fullWidth]="true"></input-component>
+      <input-component placeholder="pill" shape="pill" variant="outline" [fullWidth]="true"></input-component>
+      <input-component placeholder="square" shape="square" variant="outline" [fullWidth]="true"></input-component>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">3. Redondeo personalizado (<code>shapeClass</code>)</h2>
+    <p class="text-sm text-gray-600 mb-2">Útil cuando necesitas radios distintos por esquina o un valor que no está en <code>shape</code>.</p>
+    <app-doc-highlighted-code [code]="code.shapeClass" language="markup" ariaLabel="Código: shapeClass" />
+    <div class="max-w-xl mt-4">
+      <input-component
+        placeholder="Redondeo totalmente custom"
+        shape="rounded"
+        shapeClass="rounded-t-2xl rounded-b-md"
+        variant="outline"
+        [fullWidth]="true"
+      ></input-component>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">4. Iconos por clase (Material)</h2>
+    <app-doc-highlighted-code [code]="code.icons" language="markup" ariaLabel="Código: iconos" />
+    <div class="flex flex-col gap-4 max-w-xl mt-4">
+      <input-component
+        [formControl]="searchControl"
+        placeholder="Buscar…"
+        variant="outline"
+        [fullWidth]="true"
+        leftIconClass="material-icons text-gray-500"
+        leftIconContent="search"
+      ></input-component>
+      <p class="text-xs text-gray-500">Valor del control: <code>{{ searchControl.value | json }}</code></p>
+      <input-component
+        [formControl]="emailControl"
+        placeholder="Correo"
+        type="email"
+        variant="secondary"
+        [fullWidth]="true"
+        leftIconClass="material-icons text-gray-600"
+        leftIconContent="mail"
+        rightIconClass="material-icons text-gray-400"
+        rightIconContent="check_circle"
+      ></input-component>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">5. Icono con plantilla (MatIcon)</h2>
+    <app-doc-highlighted-code [code]="code.matIconTpl" language="markup" ariaLabel="Código: plantilla MatIcon" />
+    <div class="max-w-xl mt-4">
+      <input-component
+        placeholder="Plantilla izquierda"
+        variant="outline"
+        [fullWidth]="true"
+        [leftIconTemplate]="matSearchTpl"
+      ></input-component>
+      <ng-template #matSearchTpl>
+        <mat-icon class="!text-xl !w-6 !h-6 text-gray-500">search</mat-icon>
+      </ng-template>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">6. Tamaños</h2>
+    <app-doc-highlighted-code [code]="code.sizes" language="markup" ariaLabel="Código: tamaños" />
+    <div class="flex flex-col gap-3 max-w-xl mt-4">
+      <input-component placeholder="Small" size="sm" variant="outline" [fullWidth]="true"></input-component>
+      <input-component placeholder="Medium" size="md" variant="outline" [fullWidth]="true"></input-component>
+      <input-component placeholder="Large" size="lg" variant="outline" [fullWidth]="true"></input-component>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">7. Deshabilitado</h2>
+    <app-doc-highlighted-code [code]="code.disabled" language="markup" ariaLabel="Código: deshabilitado" />
+    <input-component
+      placeholder="No editable"
+      variant="outline"
+      [disabled]="true"
+      [fullWidth]="true"
+      class="max-w-xl mt-4 block"
+    ></input-component>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">8. Formularios reactivos</h2>
+    <p class="text-sm text-gray-600 mb-1">TypeScript</p>
+    <app-doc-highlighted-code [code]="code.formControlTs" language="typescript" ariaLabel="Código: FormControl" />
+    <p class="text-sm text-gray-600 mb-1 mt-3">Plantilla</p>
+    <app-doc-highlighted-code [code]="code.formControlTpl" language="markup" ariaLabel="Código: input con formControl" />
+  </section>
+
+  <p class="mt-8">
+    <a routerLink="/" class="text-blue-600 underline">Volver al inicio</a>
+  </p>
+</section>

@@ -1,0 +1,120 @@
+<div class="table-root" [class]="customClass">
+  <div class="table-scroll">
+  <table class="table-component" [class.table-striped]="striped">
+    <thead>
+      <tr>
+        @if (actionsPosition === 'start' && actions.length) {
+          <th class="table-actions-col">Acciones</th>
+        }
+        @for (h of headers; track h.key) {
+          <th>{{ h.label }}</th>
+        }
+        @if (actionsPosition === 'end' && actions.length) {
+          <th class="table-actions-col">Acciones</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @if (displayItems.length === 0) {
+        <tr>
+          <td [attr.colspan]="headers.length + (actions.length ? 1 : 0)" class="table-empty">
+            {{ emptyMessage }}
+          </td>
+        </tr>
+      } @else {
+        @for (item of displayItems; track $index) {
+          <tr [class.table-striped-row]="striped && $index % 2 === 1">
+            @if (actionsPosition === 'start' && actions.length) {
+              <td class="table-actions-cell">
+                <div class="table-actions">
+                  @for (action of allActions; track action.id) {
+                    @if (isActionDisabled(action, item)) {
+                      <span class="table-action-btn table-action-disabled" [title]="action.tooltip">
+                        @if (action.iconTemplate) {
+                          <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
+                        } @else if (action.iconClass) {
+                          <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
+                        }
+                        @if (action.label) {
+                          <span>{{ action.label }}</span>
+                        }
+                      </span>
+                    } @else {
+                      <button
+                        type="button"
+                        class="table-action-btn"
+                        [class]="getActionVariantClass(action.variant)"
+                        [title]="action.tooltip"
+                        (click)="onActionClick(action.id, item, $index)"
+                      >
+                        @if (action.iconTemplate) {
+                          <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
+                        } @else if (action.iconClass) {
+                          <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
+                        }
+                        @if (action.label) {
+                          <span>{{ action.label }}</span>
+                        }
+                      </button>
+                    }
+                  }
+                </div>
+              </td>
+            }
+            @for (h of headers; track h.key) {
+              <td>{{ getCellValue(item, h.key) }}</td>
+            }
+            @if (actionsPosition === 'end' && actions.length) {
+              <td class="table-actions-cell">
+                <div class="table-actions">
+                  @for (action of allActions; track action.id) {
+                    @if (isActionDisabled(action, item)) {
+                      <span class="table-action-btn table-action-disabled" [title]="action.tooltip">
+                        @if (action.iconTemplate) {
+                          <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
+                        } @else if (action.iconClass) {
+                          <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
+                        }
+                        @if (action.label) {
+                          <span>{{ action.label }}</span>
+                        }
+                      </span>
+                    } @else {
+                      <button
+                        type="button"
+                        class="table-action-btn"
+                        [class]="getActionVariantClass(action.variant)"
+                        [title]="action.tooltip"
+                        (click)="onActionClick(action.id, item, $index)"
+                      >
+                        @if (action.iconTemplate) {
+                          <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
+                        } @else if (action.iconClass) {
+                          <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
+                        }
+                        @if (action.label) {
+                          <span>{{ action.label }}</span>
+                        }
+                      </button>
+                    }
+                  }
+                </div>
+              </td>
+            }
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+  </div>
+  @if (showPagination) {
+    <paginator-component
+      [totalCount]="resolvedTotalCount"
+      [pageIndex]="effectivePageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [labels]="paginationLabels"
+      (paginationChange)="paginationChange.emit($event)"
+    />
+  }
+</div>

@@ -1,0 +1,86 @@
+<div
+  class="dropdown-container"
+  [class.dropdown-full-width]="fullWidth"
+  [class.dropdown-open]="isOpen()"
+  (click)="handleTriggerClick($event)"
+>
+  <button-component
+    [label]="displayLabel()"
+    [variant]="variant"
+    [shape]="shape"
+    [size]="size"
+    [fullWidth]="fullWidth"
+    [square]="square"
+    [disabled]="disabled"
+    [leftIconClass]="leftIconClass"
+    [rightIconClass]="rightIconClass"
+    [leftIconTemplate]="leftIconTemplate"
+    [rightIconTemplate]="rightIconTemplate ?? (hideChevron ? emptyChevron : defaultChevron)"
+    [backgroundClass]="backgroundClass"
+    [textClass]="textClass"
+    [borderClass]="borderClass"
+    [hoverClass]="hoverClass"
+    [customClass]="customClass"
+    [ariaLabel]="ariaLabel"
+    [ariaDescribedBy]="ariaDescribedBy"
+    [ariaExpanded]="isOpen()"
+    [tooltip]="tooltip"
+  ></button-component>
+
+  @if (isOpen()) {
+    <div
+      class="dropdown-panel"
+      [class]="placementClasses()"
+      role="listbox"
+      (click)="$event.stopPropagation()"
+    >
+      @for (item of items; track $index) {
+        @if (item.divided && $index > 0) {
+          <div class="dropdown-divider"></div>
+        }
+        <div
+          class="dropdown-item"
+          [class.dropdown-item-disabled]="item.disabled"
+          [class.dropdown-item-focused]="isItemFocused(item)"
+          [class.dropdown-item-divided]="item.divided"
+          role="option"
+          [attr.aria-disabled]="item.disabled"
+          [attr.aria-selected]="item.value === selectedValue"
+          (click)="handleItemClick(item, $event)"
+          (mouseenter)="!item.disabled && focusedIndex.set(enabledItems().indexOf(item))"
+        >
+          @if (itemTemplate) {
+            <ng-container
+              *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"
+            ></ng-container>
+          } @else {
+            @if (item.iconClass) {
+              <i [class]="item.iconClass" aria-hidden="true">{{ item.iconContent ?? '' }}</i>
+            }
+            <span class="dropdown-item-label">{{ item.label }}</span>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<ng-template #emptyChevron>
+  <span class="dropdown-chevron-placeholder" aria-hidden="true"></span>
+</ng-template>
+
+<ng-template #defaultChevron>
+  <svg
+    class="dropdown-chevron"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M6 9l6 6 6-6" />
+  </svg>
+</ng-template>

@@ -1,0 +1,104 @@
+<div class="card-list" [class]="customClass">
+  @if (displayItems.length === 0) {
+    <div class="card-empty">{{ emptyMessage }}</div>
+  } @else {
+    @for (item of displayItems; track $index) {
+      <div class="card-item">
+        @if (actionsPosition === 'start' && hasActions()) {
+          <div class="card-actions card-actions-start">
+            @for (action of actions; track action.id) {
+              @if (isActionDisabled(action, item)) {
+                <span
+                  class="card-action-btn card-action-disabled"
+                  [title]="action.tooltip"
+                >
+                  @if (action.iconTemplate) {
+                    <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
+                  } @else if (action.iconClass) {
+                    <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
+                  }
+                  @if (action.label) {
+                    <span>{{ action.label }}</span>
+                  }
+                </span>
+              } @else {
+                <button
+                  type="button"
+                  class="card-action-btn"
+                  [class]="getActionVariantClass(action.variant)"
+                  [title]="action.tooltip"
+                  (click)="onActionClick(action.id, item, $index)"
+                >
+                  @if (action.iconTemplate) {
+                    <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
+                  } @else if (action.iconClass) {
+                    <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
+                  }
+                  @if (action.label) {
+                    <span>{{ action.label }}</span>
+                  }
+                </button>
+              }
+            }
+          </div>
+        }
+        <div class="card-content">
+          @for (h of visibleHeaders(); track h.key) {
+            <div class="card-row">
+              <span class="card-key">{{ h.label }}</span>
+              <span class="card-value">{{ getCellValue(item, h.key) }}</span>
+            </div>
+          }
+        </div>
+        @if (actionsPosition === 'end' && hasActions()) {
+          <div class="card-actions card-actions-end">
+            @for (action of actions; track action.id) {
+              @if (isActionDisabled(action, item)) {
+                <span
+                  class="card-action-btn card-action-disabled"
+                  [title]="action.tooltip"
+                >
+                  @if (action.iconTemplate) {
+                    <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
+                  } @else if (action.iconClass) {
+                    <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
+                  }
+                  @if (action.label) {
+                    <span>{{ action.label }}</span>
+                  }
+                </span>
+              } @else {
+                <button
+                  type="button"
+                  class="card-action-btn"
+                  [class]="getActionVariantClass(action.variant)"
+                  [title]="action.tooltip"
+                  (click)="onActionClick(action.id, item, $index)"
+                >
+                  @if (action.iconTemplate) {
+                    <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
+                  } @else if (action.iconClass) {
+                    <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
+                  }
+                  @if (action.label) {
+                    <span>{{ action.label }}</span>
+                  }
+                </button>
+              }
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+  @if (showPagination) {
+    <paginator-component
+      [totalCount]="resolvedTotalCount"
+      [pageIndex]="effectivePageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [labels]="paginationLabels"
+      (paginationChange)="paginationChange.emit($event)"
+    />
+  }
+</div>

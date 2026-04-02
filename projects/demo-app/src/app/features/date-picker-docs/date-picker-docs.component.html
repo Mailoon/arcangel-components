@@ -1,0 +1,219 @@
+<section class="p-8">
+  <h1 class="text-3xl font-bold mb-2">Documentación — Date picker</h1>
+  <p class="text-gray-600 mb-6">
+    Sustituto personalizable de <code>input type="date"</code>: valor <code>YYYY-MM-DD</code> o <code>null</code>, calendario con
+    <code>calendarSize</code>, selects nativos de mes/año, límites <code>minDate</code>/<code>maxDate</code>. El disparador comparte API con
+    <code>input-component</code> (<code>variant</code>, <code>shape</code>, <code>shapeClass</code>, <code>size</code>, iconos, overrides).
+    Teclado: <kbd>Enter</kbd>/<kbd>Espacio</kbd> en el disparador abren/cierran; <kbd>Escape</kbd> cierra el panel; flechas +
+    <kbd>Enter</kbd> en la grilla de días.
+  </p>
+
+  <section class="doc-card mb-8">
+    <h2 class="text-lg font-bold mb-3">API resumida</h2>
+    <div class="doc-table-wrap">
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>Input</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2" class="doc-table-section">Valor y formulario</td>
+          </tr>
+          <tr>
+            <td><code>formControl</code> / CVA</td>
+            <td>Modelo: <code>string | null</code> en formato ISO <code>YYYY-MM-DD</code>.</td>
+          </tr>
+          <tr>
+            <td colspan="2" class="doc-table-section">Disparador (como input)</td>
+          </tr>
+          <tr>
+            <td><code>variant</code>, <code>size</code>, <code>fullWidth</code></td>
+            <td>Misma semántica que <code>input-component</code>.</td>
+          </tr>
+          <tr>
+            <td><code>shape</code></td>
+            <td
+              ><code>rounded</code> | <code>rounded-md</code> | <code>rounded-lg</code> | <code>pill</code> |
+              <code>square</code></td
+            >
+          </tr>
+          <tr>
+            <td><code>shapeClass</code></td>
+            <td>Si se define, sustituye el redondeo de <code>shape</code> (clases Tailwind).</td>
+          </tr>
+          <tr>
+            <td><code>leftIcon*</code> / <code>rightIcon*</code></td>
+            <td>Clase + contenido o <code>TemplateRef</code>; <code>showCalendarIcon</code> muestra icono por defecto si no hay derecha.</td>
+          </tr>
+          <tr>
+            <td><code>placeholder</code>, <code>displayFormatter</code></td>
+            <td>Texto vacío y formato de la fecha mostrada (por defecto DD/MM/AAAA).</td>
+          </tr>
+          <tr>
+            <td><code>backgroundClass</code>, <code>textClass</code>, …</td>
+            <td>Overrides Tailwind del wrapper del disparador.</td>
+          </tr>
+          <tr>
+            <td colspan="2" class="doc-table-section">Panel del calendario</td>
+          </tr>
+          <tr>
+            <td><code>calendarSize</code></td>
+            <td><code>sm</code> | <code>md</code> | <code>lg</code> — celdas, tipografía y padding del panel.</td>
+          </tr>
+          <tr>
+            <td><code>minDate</code>, <code>maxDate</code></td>
+            <td>String ISO o <code>Date</code>; deshabilita días fuera del rango.</td>
+          </tr>
+          <tr>
+            <td><code>minYear</code>, <code>maxYear</code></td>
+            <td>Rango del <code>&lt;select&gt;</code> de año (si no, se infiere de min/max).</td>
+          </tr>
+          <tr>
+            <td><code>firstDayOfWeek</code></td>
+            <td><code>0</code> = domingo, <code>1</code> = lunes (por defecto).</td>
+          </tr>
+          <tr>
+            <td><code>monthLabels</code>, <code>weekdayLabels</code></td>
+            <td>Opcional; por defecto etiquetas en español.</td>
+          </tr>
+          <tr>
+            <td><code>placement</code></td>
+            <td><code>bottom-start</code> | <code>bottom-end</code> | <code>top-start</code> | <code>top-end</code> (preferencia inicial).</td>
+          </tr>
+          <tr>
+            <td><code>autoFlipPlacement</code></td>
+            <td
+              >Por defecto <code>true</code>: el panel del calendario elige arriba/abajo (y alineación) según espacio en
+              pantalla. Mes y año usan <code>dropdown-component</code> con la misma lógica.</td
+            >
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">1. Reactive form (valor ISO)</h2>
+    <app-doc-highlighted-code [code]="code.intro" language="markup" ariaLabel="Código: date picker con formControl" />
+    <p class="text-sm text-gray-600 mt-2 mb-2">Control en vivo: <code>{{ dateControl.value | json }}</code></p>
+    <div class="max-w-md mt-4">
+      <date-picker-component
+        [formControl]="dateControl"
+        placeholder="Elegir fecha"
+        variant="outline"
+        shape="rounded-lg"
+        [fullWidth]="true"
+      ></date-picker-component>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">2. Vacío (<code>null</code>)</h2>
+    <p class="text-sm text-gray-600 mb-1">TypeScript</p>
+    <app-doc-highlighted-code [code]="code.emptyTs" language="typescript" ariaLabel="Código: FormControl null" />
+    <p class="text-sm text-gray-600 mb-1 mt-3">Plantilla</p>
+    <app-doc-highlighted-code [code]="code.emptyTpl" language="markup" ariaLabel="Código: date picker vacío" />
+    <div class="max-w-md mt-4">
+      <date-picker-component
+        [formControl]="emptyControl"
+        placeholder="Sin fecha"
+        variant="outline"
+        [fullWidth]="true"
+      ></date-picker-component>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">3. Forma del disparador y <code>shapeClass</code></h2>
+    <app-doc-highlighted-code [code]="code.shapes" language="markup" ariaLabel="Código: shape y shapeClass" />
+    <div class="flex flex-col gap-3 max-w-md mt-4">
+      <date-picker-component placeholder="rounded-md" shape="rounded-md" variant="outline" [fullWidth]="true"></date-picker-component>
+      <date-picker-component placeholder="pill + primary" shape="pill" variant="primary" [fullWidth]="true"></date-picker-component>
+      <date-picker-component
+        placeholder="shapeClass rounded-2xl"
+        shape="rounded"
+        shapeClass="rounded-2xl"
+        variant="outline"
+        [fullWidth]="true"
+      ></date-picker-component>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">4. Tamaño del calendario y variantes</h2>
+    <app-doc-highlighted-code [code]="code.calendarSizes" language="markup" ariaLabel="Código: calendarSize" />
+    <div class="flex flex-col gap-4 max-w-md mt-4">
+      <date-picker-component
+        placeholder="Calendario pequeño"
+        calendarSize="sm"
+        variant="primary"
+        shape="rounded-md"
+        [fullWidth]="true"
+      ></date-picker-component>
+      <date-picker-component
+        placeholder="Calendario mediano (por defecto)"
+        calendarSize="md"
+        variant="outline"
+        [fullWidth]="true"
+      ></date-picker-component>
+      <date-picker-component
+        placeholder="Calendario grande"
+        calendarSize="lg"
+        variant="ghost"
+        [fullWidth]="true"
+      ></date-picker-component>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">5. Min / max</h2>
+    <app-doc-highlighted-code [code]="code.minMax" language="markup" ariaLabel="Código: min max" />
+    <p class="text-sm text-gray-600 mt-2 mb-2">Solo días entre 2025-01-10 y 2025-12-20.</p>
+    <div class="max-w-md mt-4">
+      <date-picker-component
+        placeholder="Rango limitado"
+        minDate="2025-01-10"
+        maxDate="2025-12-20"
+        variant="outline"
+        [fullWidth]="true"
+      ></date-picker-component>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">6. Semana desde domingo</h2>
+    <app-doc-highlighted-code [code]="code.firstDow" language="markup" ariaLabel="Código: firstDayOfWeek" />
+    <div class="max-w-md mt-4">
+      <date-picker-component
+        placeholder="firstDayOfWeek = 0"
+        [firstDayOfWeek]="0"
+        variant="outline"
+        [fullWidth]="true"
+      ></date-picker-component>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">7. Disparador: iconos y overrides</h2>
+    <app-doc-highlighted-code [code]="code.triggerStyle" language="markup" ariaLabel="Código: disparador e iconos" />
+    <div class="max-w-md mt-4">
+      <date-picker-component
+        placeholder="Icono event + borde"
+        variant="ghost"
+        size="lg"
+        [showCalendarIcon]="false"
+        rightIconClass="material-icons text-gray-600"
+        rightIconContent="event"
+        borderClass="border border-dashed border-gray-300"
+        [fullWidth]="true"
+      ></date-picker-component>
+    </div>
+  </section>
+
+  <p class="mt-8 text-sm text-gray-600">
+    <a routerLink="/" class="text-blue-600 underline">Volver al inicio</a>
+  </p>
+</section>

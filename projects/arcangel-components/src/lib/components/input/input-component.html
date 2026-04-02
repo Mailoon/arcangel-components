@@ -1,0 +1,42 @@
+<div class="input-component" [class.w-full]="fullWidth" [title]="tooltip ?? ''">
+  <div [class]="wrapperClasses">
+    @if (leftIconTemplate) {
+      <span class="input-component__icon input-component__icon--left" aria-hidden="true">
+        <ng-container *ngTemplateOutlet="leftIconTemplate"></ng-container>
+      </span>
+    } @else if (leftIconClass) {
+      <i [class]="leftIconClass + ' input-component__icon input-component__icon--left'" aria-hidden="true">{{
+        leftIconContent
+      }}</i>
+    }
+
+    <input
+      [attr.id]="inputId || null"
+      [attr.name]="name || null"
+      [type]="type"
+      [placeholder]="placeholder"
+      [disabled]="isDisabled"
+      [readonly]="readOnly"
+      [attr.autocomplete]="autocomplete || null"
+      [attr.maxlength]="maxlength !== null ? maxlength : null"
+      [attr.inputmode]="inputMode ?? null"
+      [attr.aria-label]="ariaLabel ?? null"
+      [attr.aria-describedby]="ariaDescribedBy ?? null"
+      [value]="value"
+      (input)="onInput($event)"
+      (blur)="onBlurFn($event)"
+      (focus)="onFocusFn($event)"
+      [class]="nativeInputClasses"
+    />
+
+    @if (rightIconTemplate) {
+      <span class="input-component__icon input-component__icon--right" aria-hidden="true">
+        <ng-container *ngTemplateOutlet="rightIconTemplate"></ng-container>
+      </span>
+    } @else if (rightIconClass) {
+      <i [class]="rightIconClass + ' input-component__icon input-component__icon--right'" aria-hidden="true">{{
+        rightIconContent
+      }}</i>
+    }
+  </div>
+</div>
