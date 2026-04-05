@@ -80,7 +80,7 @@
     <ng-container *ngTemplateOutlet="labelTemplate; context: labelTemplateContext ?? {}"></ng-container>
   }
   @if (!labelTemplate && label) {
-    <span class="button-label">{{ label }}</span>
+    <span class="inline-block whitespace-nowrap">{{ label }}</span>
   }
 
   <!-- Right Icon -->

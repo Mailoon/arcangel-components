@@ -1,17 +1,12 @@
-<div
-  class="stepper-container"
-  [class]="customClass"
-  [class.stepper-breakpoint-sm]="breakpoint === 'sm'"
-  [class.stepper-breakpoint-md]="breakpoint === 'md'"
-  [class.stepper-breakpoint-lg]="breakpoint === 'lg'"
->
-  <div class="stepper-steps-wrapper">
+<div class="flex flex-col flex-auto gap-6 w-full max-w-full min-w-0 min-h-0 overflow-hidden box-border" [class]="customClass">
+  <div class="shrink-0 w-full max-w-full min-w-0 overflow-hidden">
+
     <!-- Desktop: horizontal -->
-    <div class="stepper-desktop">
+    <div [class]="desktopClasses">
       @for (step of steps; track step.id; let i = $index) {
-        <div class="stepper-step-node">
+        <div class="flex items-center flex-[0_1_auto] min-w-0 max-w-[min(32%,14rem)]">
           <div
-            class="stepper-step-circle"
+            class="shrink-0 w-7 h-7 rounded-full border-2 flex items-center justify-center font-semibold text-xs"
             [style.background-color]="getStepStyles(i)['background-color']"
             [style.border-color]="getStepStyles(i)['border-color']"
             [style.color]="getStepStyles(i)['color']"
@@ -23,26 +18,27 @@
                 <i [class]="step.completedIconClass">{{ step.completedIconContent ?? '' }}</i>
               }
             } @else {
-              <span class="stepper-step-number">{{ i + 1 }}</span>
+              <span class="leading-none">{{ i + 1 }}</span>
             }
           </div>
-          <span class="stepper-step-name">{{ step.name }}</span>
+          <span class="ml-1.5 text-[0.8125rem] font-semibold whitespace-nowrap overflow-hidden text-ellipsis min-w-0 flex-[0_1_auto]">{{ step.name }}</span>
         </div>
         @if (i < steps.length - 1) {
           <div
-            class="stepper-connector"
+            class="flex-1 h-0.5 mx-2 min-w-[0.5rem] self-center"
             [style.background-color]="getConnectorColor(i)"
             role="presentation"
           ></div>
         }
       }
     </div>
+
     <!-- Mobile: vertical -->
-    <div class="stepper-mobile">
+    <div [class]="mobileClasses">
       @for (step of steps; track step.id; let i = $index) {
-        <div class="stepper-step-row">
+        <div class="flex items-center gap-2 min-w-0 w-full max-w-full">
           <div
-            class="stepper-step-circle"
+            class="shrink-0 w-7 h-7 rounded-full border-2 flex items-center justify-center font-semibold text-xs"
             [style.background-color]="getStepStyles(i)['background-color']"
             [style.border-color]="getStepStyles(i)['border-color']"
             [style.color]="getStepStyles(i)['color']"
@@ -54,27 +50,30 @@
                 <i [class]="step.completedIconClass">{{ step.completedIconContent ?? '' }}</i>
               }
             } @else {
-              <span class="stepper-step-number">{{ i + 1 }}</span>
+              <span class="leading-none">{{ i + 1 }}</span>
             }
           </div>
-          <span class="stepper-step-name">{{ step.name }}</span>
+          <span class="min-w-0 flex-1 whitespace-nowrap overflow-hidden text-ellipsis">{{ step.name }}</span>
         </div>
         @if (i < steps.length - 1) {
           <div
-            class="stepper-connector-vertical"
+            class="w-0.5 min-h-3 ml-3"
             [style.background-color]="getConnectorColor(i)"
           ></div>
         }
       }
     </div>
+
   </div>
 
-  <div class="stepper-body">
+  <!-- Contenido del paso activo -->
+  <div class="flex-auto min-h-0 min-w-0 w-full max-w-full overflow-auto box-border">
     <ng-content></ng-content>
   </div>
 
-  <div class="stepper-actions">
-    <div class="stepper-actions-left">
+  <!-- Acciones -->
+  <div class="flex justify-between items-center gap-4 flex-wrap shrink-0 w-full max-w-full min-w-0 box-border">
+    <div class="flex flex-wrap gap-2 min-w-0">
       @if (showCancelButton && !cancelButton.hidden) {
         <button-component
           [label]="cancelButton.label ?? 'Cancelar'"
@@ -85,7 +84,7 @@
         ></button-component>
       }
     </div>
-    <div class="stepper-actions-right">
+    <div class="flex flex-wrap gap-2 ml-auto min-w-0 justify-end">
       @if (!previousButton.hidden) {
         <button-component
           [label]="previousButton.label ?? 'Anterior'"

@@ -15,7 +15,17 @@ import {
   computed,
 } from '@angular/core';
 import { ButtonComponent } from '../button';
-import { resolveAutoDropdownPlacement } from '../../shared/dropdown-placement.utils';
+import { placementToPositionClasses, resolveAutoDropdownPlacement } from '../../shared/dropdown-placement.utils';
+import {
+  getOverlayContainerClasses,
+  getOverlayPanelClasses,
+  getOverlayItemClasses,
+  OVERLAY_DIVIDER_CLASSES,
+  OVERLAY_ITEM_LABEL_CLASSES,
+  getChevronClasses,
+  CHEVRON_PLACEHOLDER_CLASSES,
+} from '../../shared/overlay-styles';
+import { ArcControlBase } from '../../shared/arc-control.base';
 
 export type DropdownVariant =
   | 'primary'
@@ -47,37 +57,16 @@ export interface DropdownItem {
   standalone: true,
   imports: [CommonModule, ButtonComponent],
   templateUrl: './dropdown-component.html',
-  styleUrls: ['./dropdown-component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DropdownComponent implements OnChanges {
+export class DropdownComponent extends ArcControlBase implements OnChanges {
   private readonly elementRef = inject(ElementRef);
 
   // === INPUT: Basic ===
   @Input() label = '';
   @Input() placeholder = 'Seleccionar...';
   @Input() items: DropdownItem[] = [];
-  @Input() disabled = false;
-
-  // === INPUT: Trigger (como Button) ===
-  @Input() variant: DropdownVariant = 'primary';
-  @Input() shape: DropdownShape = 'rounded';
-  @Input() size: DropdownSize = 'md';
-  @Input() fullWidth = false;
   @Input() square = false;
-
-  // === INPUT: Iconos ===
-  @Input() leftIconClass = '';
-  @Input() rightIconClass = '';
-  @Input() leftIconTemplate?: TemplateRef<unknown>;
-  @Input() rightIconTemplate?: TemplateRef<unknown>;
-
-  // === INPUT: Clases custom ===
-  @Input() backgroundClass = '';
-  @Input() textClass = '';
-  @Input() borderClass = '';
-  @Input() hoverClass = '';
-  @Input() customClass = '';
 
   // === INPUT: Comportamiento ===
   @Input() closeOnSelect = true;
@@ -93,11 +82,6 @@ export class DropdownComponent implements OnChanges {
 
   // === INPUT: Plantillas ===
   @Input() itemTemplate?: TemplateRef<{ $implicit: DropdownItem }>;
-
-  // === INPUT: Accesibilidad ===
-  @Input() ariaLabel?: string;
-  @Input() ariaDescribedBy?: string;
-  @Input() tooltip?: string;
 
   // === OUTPUT ===
   @Output() itemSelected = new EventEmitter<DropdownItem>();
@@ -116,16 +100,9 @@ export class DropdownComponent implements OnChanges {
     return sel?.label ?? (this.label || this.placeholder);
   });
 
-  readonly placementClasses = computed(() => {
-    const p = this.resolvedFlip() ?? this.placement;
-    const map: Record<DropdownPlacement, string> = {
-      'bottom-start': 'top-full left-0 mt-1',
-      'bottom-end': 'top-full right-0 mt-1',
-      'top-start': 'bottom-full left-0 mb-1',
-      'top-end': 'bottom-full right-0 mb-1',
-    };
-    return map[p] ?? map['bottom-start'];
-  });
+  readonly placementClasses = computed(() =>
+    placementToPositionClasses(this.resolvedFlip() ?? this.placement)
+  );
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['placement'] && !changes['placement'].firstChange) {
@@ -137,11 +114,29 @@ export class DropdownComponent implements OnChanges {
     this.items.filter((i) => !i.disabled)
   );
 
+  // === COMPUTED: CSS Classes ===
+  readonly containerClasses = computed(() =>
+    getOverlayContainerClasses(this.fullWidth, this.isOpen())
+  );
+  readonly panelBaseClasses = getOverlayPanelClasses();
+  readonly dividerClasses = OVERLAY_DIVIDER_CLASSES;
+  readonly itemLabelClasses = OVERLAY_ITEM_LABEL_CLASSES;
+  readonly chevronPlaceholderClasses = CHEVRON_PLACEHOLDER_CLASSES;
+  readonly chevronClasses = computed(() => getChevronClasses(this.isOpen()));
+
+  getItemClasses(item: DropdownItem): string {
+    return getOverlayItemClasses({
+      disabled: item.disabled,
+      focused: this.isItemFocused(item),
+      divided: item.divided,
+    });
+  }
+
   handleTriggerClick(event: MouseEvent) {
     if (this.disabled) return;
     // Solo actuar si el click fue en el trigger (no propagado desde items del panel)
     const target = event.target as Node;
-    if (this.elementRef.nativeElement.querySelector('.dropdown-panel')?.contains(target)) {
+    if (this.elementRef.nativeElement.querySelector('[data-arc-panel]')?.contains(target)) {
       return;
     }
     this.toggle();
@@ -179,7 +174,7 @@ export class DropdownComponent implements OnChanges {
   private applyAutoFlipPlacement(): void {
     if (!this.isOpen() || !this.autoFlipPlacement) return;
     const host = this.elementRef.nativeElement as HTMLElement;
-    const panel = host.querySelector('.dropdown-panel') as HTMLElement | null;
+    const panel = host.querySelector('[data-arc-panel]') as HTMLElement | null;
     if (!panel) return;
     const tr = host.getBoundingClientRect();
     const pr = panel.getBoundingClientRect();

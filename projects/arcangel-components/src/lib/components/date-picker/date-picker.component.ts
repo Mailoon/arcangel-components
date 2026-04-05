@@ -14,11 +14,12 @@ import {
   inject,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import type { ButtonLikeShape, ButtonLikeSize, ButtonLikeVariant } from '../../shared/button-like-styles';
 import {
   getButtonLikeSizeClasses,
   resolveButtonLikeShapeClasses,
-} from '../../shared/button-like-styles';
+  variantUsesLightForeground,
+  type ButtonLikeVariant,
+} from '../../shared/arc-control-styles';
 import {
   DropdownComponent,
   type DropdownItem,
@@ -40,6 +41,7 @@ import {
   toDateInput,
   type DayCell,
 } from './date-picker.utils';
+import { ArcControlBase } from '../../shared/arc-control.base';
 
 let datePickerUid = 0;
 
@@ -58,41 +60,24 @@ let datePickerUid = 0;
     },
   ],
 })
-export class DatePickerComponent implements ControlValueAccessor {
+export class DatePickerComponent extends ArcControlBase implements ControlValueAccessor {
   private readonly elementRef = inject(ElementRef);
   private readonly cdr = inject(ChangeDetectorRef);
 
   readonly instanceId = `dp-${++datePickerUid}`;
   readonly panelId = `${this.instanceId}-panel`;
 
-  @Input() variant: ButtonLikeVariant = 'outline';
-  @Input() shape: ButtonLikeShape = 'rounded';
+  // Variante por defecto distinta al base (outline en lugar de primary)
+  @Input() override variant: ButtonLikeVariant = 'outline';
+
   /** Si se define, reemplaza las clases de redondeo del `shape` (Tailwind u otras). */
   @Input() shapeClass = '';
-  @Input() size: ButtonLikeSize = 'md';
-  @Input() fullWidth = false;
-
-  @Input() leftIconClass = '';
-  @Input() rightIconClass = '';
   @Input() leftIconContent = '';
   @Input() rightIconContent = '';
-  @Input() leftIconTemplate?: TemplateRef<unknown>;
-  @Input() rightIconTemplate?: TemplateRef<unknown>;
-
-  @Input() backgroundClass = '';
-  @Input() textClass = '';
-  @Input() borderClass = '';
-  @Input() hoverClass = '';
-  @Input() customClass = '';
 
   @Input() placeholder = 'Seleccionar fecha';
   /** Si no hay `rightIconClass` ni `rightIconTemplate`, muestra icono Material `calendar_today`. */
   @Input() showCalendarIcon = true;
-  @Input() disabled = false;
-  @Input() ariaLabel?: string;
-  @Input() ariaDescribedBy?: string;
-  @Input() tooltip?: string;
-
   /** Valor mostrado en el disparador (por defecto DD/MM/AAAA). */
   @Input() displayFormatter?: (iso: string) => string;
 
@@ -187,6 +172,69 @@ export class DatePickerComponent implements ControlValueAccessor {
     return placementToPositionClasses(this.resolvedPanelPlacement ?? this.placement);
   }
 
+  /** Clases del panel del calendario (sustituye .date-picker-panel + @keyframes). */
+  get panelClasses(): string {
+    return [
+      'absolute z-[1050] box-border bg-white border border-gray-200 rounded-md shadow-arc-panel p-3',
+      'min-w-[min(100%,17rem)] w-max max-w-[min(calc(100vw-0.75rem),22rem)]',
+      'animate-arc-popover-in',
+    ].join(' ');
+  }
+
+  /** Clases del contenedor raíz (posiciona el panel). */
+  get containerClasses(): string {
+    return [
+      'relative box-border',
+      this.isOpen ? 'z-20' : 'z-0',
+      this.fullWidth ? 'block w-full' : 'inline-block',
+    ].join(' ');
+  }
+
+  /** customClass para los dropdown de mes/año en la cabecera (reemplaza ::ng-deep). */
+  get headerDropdownCustomClass(): string {
+    const sizeExtra = this.calendarSize === 'lg' ? 'py-2 text-base' : 'text-sm';
+    return `w-full justify-between border border-gray-300 bg-white font-medium ${sizeExtra}`;
+  }
+
+  /** Clases del label de día de la semana según calendarSize. */
+  get weekdayLabelClasses(): string {
+    const sizeText =
+      this.calendarSize === 'sm' ? 'text-[0.625rem]' :
+      this.calendarSize === 'lg' ? 'text-xs' : 'text-[0.6875rem]';
+    return `text-center ${sizeText} font-semibold text-gray-500 uppercase tracking-[0.02em]`;
+  }
+
+  /** Clases de una celda de día según su estado. */
+  getDayCellClasses(cell: DayCell, ri: number, ci: number): string {
+    const isSelected = this.isSelectedDate(cell.date);
+    const isFocused = this.isFocusedCell(ri, ci);
+    const isOutside = !cell.inMonth;
+    const isDisabled = !cell.inMonth || cell.disabled;
+
+    const sizeMap: Record<'sm' | 'md' | 'lg', string> = {
+      sm: 'min-w-[1.75rem] h-7 text-xs',
+      md: 'min-w-[2.25rem] h-9 text-sm',
+      lg: 'min-w-[2.75rem] h-11 text-base',
+    };
+
+    return [
+      'flex items-center justify-center m-0 p-0 border-0 rounded bg-transparent',
+      'cursor-pointer leading-none transition-colors duration-[120ms]',
+      'focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:outline-offset-[1px]',
+      sizeMap[this.calendarSize],
+      isOutside ? 'text-gray-400' : 'text-gray-900',
+      isSelected && !isDisabled ? 'bg-blue-600 text-white hover:bg-blue-700' : '',
+      isFocused && !isDisabled && !isSelected ? 'bg-blue-50' : '',
+      !isSelected && !isDisabled ? 'hover:bg-gray-100' : '',
+      isDisabled ? 'opacity-35 cursor-not-allowed' : '',
+    ].filter(Boolean).join(' ');
+  }
+
+  /** Clases del icono del trigger (izq/der). */
+  readonly triggerIconBase = 'shrink-0 inline-flex items-center justify-center text-[1.125em] leading-none opacity-90';
+  readonly triggerIconLeft  = `${this.triggerIconBase} -mr-0.5`;
+  readonly triggerIconRight = `${this.triggerIconBase} -ml-0.5`;
+
   get monthDropdownItems(): DropdownItem[] {
     return this.monthLabels.map((label, i) => ({ label, value: i }));
   }
@@ -214,15 +262,8 @@ export class DatePickerComponent implements ControlValueAccessor {
     const sizeBlock = getButtonLikeSizeClasses(this.size);
     const shapeBlock = resolveButtonLikeShapeClasses(this.shape, this.shapeClass);
 
-    const hoverClassValue = this.hoverClass
-      ? this.hoverClass.trim().startsWith('hover:')
-        ? this.hoverClass.trim()
-        : `hover:${this.hoverClass.trim()}`
-      : '';
-
     return [
-      'date-picker-component__wrap',
-      'input-component__wrap',
+      'box-border max-w-full',
       'inline-flex items-center gap-2 overflow-hidden',
       'transition-all duration-200',
       'outline-none focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2',
@@ -231,7 +272,7 @@ export class DatePickerComponent implements ControlValueAccessor {
       this.backgroundClass || '',
       this.textClass || '',
       this.borderClass || '',
-      hoverClassValue,
+      this.resolveHoverClass(),
       this.customClass || '',
       this.fullWidth ? 'w-full' : '',
       this.isDisabled ? 'opacity-50 cursor-not-allowed' : '',
@@ -241,10 +282,10 @@ export class DatePickerComponent implements ControlValueAccessor {
   }
 
   get nativeFieldClasses(): string {
-    const lightOnDark = ['primary', 'danger', 'success', 'warning'].includes(this.variant);
+    const lightOnDark = variantUsesLightForeground(this.variant);
     const placeholder = lightOnDark ? 'placeholder:text-white/55' : 'placeholder:text-gray-400';
     return [
-      'input-component__field',
+      'box-border min-h-[1.25em]',
       'flex-1 min-w-0 bg-transparent border-0 outline-none ring-0 text-left',
       'text-inherit',
       placeholder,
@@ -300,7 +341,7 @@ export class DatePickerComponent implements ControlValueAccessor {
   onRootClick(event: MouseEvent): void {
     if (this.isDisabled) return;
     const target = event.target as Node;
-    if (this.elementRef.nativeElement.querySelector('.date-picker-panel')?.contains(target)) {
+    if (this.elementRef.nativeElement.querySelector('[data-arc-panel]')?.contains(target)) {
       return;
     }
     this.toggle();
@@ -356,8 +397,8 @@ export class DatePickerComponent implements ControlValueAccessor {
       return;
     }
     const root = this.elementRef.nativeElement as HTMLElement;
-    const panel = root.querySelector('.date-picker-panel') as HTMLElement | null;
-    const btn = root.querySelector('.date-picker-component button') as HTMLElement | null;
+    const panel = root.querySelector('[data-arc-panel]') as HTMLElement | null;
+    const btn = root.querySelector('[data-dp-trigger]') as HTMLElement | null;
     if (!panel || !btn) return;
     const tr = btn.getBoundingClientRect();
     const pr = panel.getBoundingClientRect();

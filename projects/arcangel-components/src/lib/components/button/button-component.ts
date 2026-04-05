@@ -1,15 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, TemplateRef, signal, ChangeDetectionStrategy, OnInit, OnChanges } from '@angular/core';
-import type { ButtonLikeShape, ButtonLikeSize, ButtonLikeVariant } from '../../shared/button-like-styles';
 import {
   getButtonLikeShapeClasses,
   getButtonLikeSizeClasses,
   getButtonLikeVariantClasses,
-} from '../../shared/button-like-styles';
+} from '../../shared/arc-control-styles';
+import { ArcControlBase } from '../../shared/arc-control.base';
 
-type ButtonVariant = ButtonLikeVariant;
-type ButtonSize = ButtonLikeSize;
-type ButtonShape = ButtonLikeShape;
 type ButtonState = 'default' | 'success' | 'error';
 
 @Component({
@@ -17,37 +14,16 @@ type ButtonState = 'default' | 'success' | 'error';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './button-component.html',
-  styleUrls: ['./button-component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ButtonComponent implements OnInit, OnChanges {
+export class ButtonComponent extends ArcControlBase implements OnInit, OnChanges {
   // === INPUT: Basic ===
   @Input() label = 'Button';
   @Input() labelTemplate?: TemplateRef<unknown>;
   @Input() labelTemplateContext?: Record<string, unknown>;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
-  @Input() disabled = false;
-
-  // === INPUT: Variant & Styling ===
-  @Input() variant: ButtonVariant = 'primary';
-  @Input() shape: ButtonShape = 'rounded';
-  @Input() size: ButtonSize = 'md';
-  @Input() fullWidth = false;
   @Input() square = false; // icon-only mode
-
-  // === INPUT: Iconos (izquierda/derecha) ===
-  @Input() leftIconClass = '';
-  @Input() rightIconClass = '';
-  @Input() leftIconTemplate?: TemplateRef<unknown>;
-  @Input() rightIconTemplate?: TemplateRef<unknown>;
   @Input() loadingIcon?: TemplateRef<unknown>;
-
-  // === INPUT: Personalización avanzada de clases ===
-  @Input() backgroundClass = '';
-  @Input() textClass = '';
-  @Input() borderClass = '';
-  @Input() hoverClass = '';
-  @Input() customClass = '';
 
   // === INPUT: Link/Routing ===
   @Input() routerLink?: string | any[];
@@ -61,14 +37,11 @@ export class ButtonComponent implements OnInit, OnChanges {
   @Input() preventMultipleClicks = false;
   @Input() debounceTime = 0;
 
-  // === INPUT: Accesibilidad ===
-  @Input() ariaLabel?: string;
-  @Input() ariaDescribedBy?: string;
+  // === INPUT: Accesibilidad (específicos de button) ===
   @Input() ariaExpanded?: boolean;
   @Input() role = 'button';
 
   // === INPUT: Animation & UX ===
-  @Input() tooltip?: string;
   @Input() transition = 'all 200ms ease-in-out';
   @Input() trackingId?: string; // para analytics
 
@@ -101,24 +74,17 @@ export class ButtonComponent implements OnInit, OnChanges {
     const sizeClasses = this.getSizeClasses();
     const shapeClasses = this.getShapeClasses();
     const stateClasses = this.getStateClasses();
-    const disabledClasses = (this.disabled || this.isLoading()) 
-      ? 'opacity-50 cursor-not-allowed pointer-events-none' 
+    const disabledClasses = (this.disabled || this.isLoading())
+      ? 'opacity-50 cursor-not-allowed pointer-events-none'
       : '';
     const fullWidthClass = this.fullWidth ? 'w-full' : '';
     const squareClass = this.square ? 'aspect-square' : '';
 
-    const hasCustomOverrides =
-      this.backgroundClass || this.textClass || this.borderClass || this.hoverClass;
-
-    const hoverClassValue = this.hoverClass
-      ? this.hoverClass.trim().startsWith('hover:')
-        ? this.hoverClass.trim()
-        : `hover:${this.hoverClass.trim()}`
-      : '';
-
     return [
       'inline-flex items-center justify-center gap-2 font-semibold',
+      'border-0 cursor-pointer no-underline relative',
       'transition-all duration-200',
+      'focus:outline-none focus-visible:outline-offset-2',
       variantClasses || '',
       sizeClasses || '',
       shapeClasses || '',
@@ -126,9 +92,8 @@ export class ButtonComponent implements OnInit, OnChanges {
       this.backgroundClass || '',
       this.textClass || '',
       this.borderClass || '',
-      hoverClassValue,
+      this.resolveHoverClass(),
       this.customClass || '',
-      this.disabled || hasCustomOverrides ? '' : '',
       disabledClasses,
       fullWidthClass,
       squareClass,
@@ -156,9 +121,9 @@ export class ButtonComponent implements OnInit, OnChanges {
 
   private getStateClasses(): string {
     if (this.currentState() === 'success')
-      return 'bg-green-500';
+      return 'bg-[#0d9488] text-white';
     if (this.currentState() === 'error')
-      return 'bg-red-500';
+      return 'bg-orange-500 text-white';
     return '';
   }
 

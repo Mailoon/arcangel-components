@@ -1,9 +1,10 @@
-<div class="paginator">
-  <div class="paginator__status">
+<div class="flex flex-col items-stretch gap-[0.875rem] w-full max-w-full box-border pt-4 mt-2 border-t border-slate-200 overflow-visible md:flex-row md:flex-wrap md:items-start md:justify-between md:gap-x-6 md:gap-y-4">
+
+  <div class="flex-[1_1_auto] min-w-0">
     @if (totalCount === 0) {
-      <span class="paginator__text">{{ mergedLabels().noRecords }}</span>
+      <span class="text-sm text-slate-600 leading-[1.4]">{{ mergedLabels().noRecords }}</span>
     } @else {
-      <span class="paginator__text">
+      <span class="text-sm text-slate-600 leading-[1.4]">
         {{ mergedLabels().showing }}
         {{ rangeStart }} - {{ rangeEnd }} {{ mergedLabels().of }} {{ totalCount }}
         {{ mergedLabels().records }}
@@ -11,13 +12,12 @@
     }
   </div>
 
-  <div class="paginator__toolbar">
+  <div class="flex flex-col items-stretch gap-3 w-full min-w-0 overflow-visible sm:flex-row sm:flex-wrap sm:items-center sm:justify-end sm:gap-x-4 sm:gap-y-3 md:flex-[0_1_auto] md:justify-end md:max-w-full">
     @if (showPageSize && totalCount > 0) {
-      <label class="paginator__page-size">
-        <span class="paginator__page-size-label">{{ mergedLabels().perPage }}</span>
-        <span class="paginator__select-wrap">
+      <label class="flex items-center gap-2 flex-nowrap shrink-0">
+        <span class="text-sm text-slate-600 whitespace-nowrap">{{ mergedLabels().perPage }}</span>
+        <span class="inline-block min-w-[4.25rem] align-middle">
           <searchable-select-component
-            class="paginator__page-size-select"
             [items]="pageSizeItems"
             [selectedValue]="pageSize"
             [placeholder]="pageSize + ''"
@@ -31,43 +31,45 @@
     }
 
     @if (totalCount > 0 && pageCount > 0) {
-      <div class="paginator__nav-wrap" #navWrap role="presentation">
-        <nav class="paginator__nav" role="navigation" aria-label="Paginación">
+      <div class="min-w-0 max-w-full overflow-visible" #navWrap role="presentation">
+        <nav class="flex flex-nowrap items-center gap-1 py-0.5" role="navigation" aria-label="Paginación">
           <button
             type="button"
-            class="paginator__btn paginator__nav-btn"
+            class="flex-none min-w-[2.125rem] h-9 px-[0.45rem] bg-slate-800 text-white text-sm font-semibold rounded-md border-none cursor-pointer transition-colors duration-150 hover:enabled:bg-slate-700 disabled:opacity-45 disabled:cursor-not-allowed"
             [disabled]="!canPrev"
             (click)="prev()"
             aria-label="Página anterior"
-          >
-            &lt;
-          </button>
+          >&lt;</button>
+
           @for (entry of pageButtons; track $index) {
             @if (entry === 'ellipsis') {
-              <span class="paginator__ellipsis" aria-hidden="true">…</span>
+              <span class="inline-flex items-center justify-center min-w-[1.125rem] px-[0.0625rem] text-sm font-semibold text-slate-400 select-none pointer-events-none" aria-hidden="true">…</span>
             } @else {
               <button
                 type="button"
-                class="paginator__btn paginator__nav-btn"
-                [class.paginator__nav-btn--active]="pageIndex === entry"
+                class="flex-none min-w-[2.125rem] h-9 px-[0.45rem] text-sm font-semibold rounded-md border-none cursor-pointer transition-colors duration-150"
+                [class.bg-teal-600]="pageIndex === entry"
+                [class.text-white]="pageIndex === entry"
+                [class.bg-slate-800]="pageIndex !== entry"
+                [class.text-white]="pageIndex !== entry"
+                [class.hover:bg-slate-700]="pageIndex !== entry"
+                [class.opacity-100]="pageIndex === entry"
+                [class.cursor-default]="pageIndex === entry"
                 [disabled]="pageIndex === entry"
                 (click)="goToPage(entry)"
                 [attr.aria-label]="'Página ' + displayPageOneBased(entry)"
                 [attr.aria-current]="pageIndex === entry ? 'page' : null"
-              >
-                {{ displayPageOneBased(entry) }}
-              </button>
+              >{{ displayPageOneBased(entry) }}</button>
             }
           }
+
           <button
             type="button"
-            class="paginator__btn paginator__nav-btn"
+            class="flex-none min-w-[2.125rem] h-9 px-[0.45rem] bg-slate-800 text-white text-sm font-semibold rounded-md border-none cursor-pointer transition-colors duration-150 hover:enabled:bg-slate-700 disabled:opacity-45 disabled:cursor-not-allowed"
             [disabled]="!canNext"
             (click)="next()"
             aria-label="Página siguiente"
-          >
-            &gt;
-          </button>
+          >&gt;</button>
         </nav>
       </div>
     }

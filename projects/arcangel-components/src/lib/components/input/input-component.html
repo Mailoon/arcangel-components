@@ -1,42 +1,146 @@
-<div class="input-component" [class.w-full]="fullWidth" [title]="tooltip ?? ''">
-  <div [class]="wrapperClasses">
+<div class="box-border" [class.w-full]="fullWidth">
+
+  <!-- ─── Template reutilizable: iconos + input (sin etiqueta flotante propia) ─── -->
+  <ng-template #innerField>
+    @if (hasLabel && labelMode === 'static') {
+      <label [attr.for]="resolvedInputId!" [class]="labelStaticClasses">{{ label }}</label>
+    }
+
     @if (leftIconTemplate) {
-      <span class="input-component__icon input-component__icon--left" aria-hidden="true">
+      <span [class]="iconLeftClasses" aria-hidden="true">
         <ng-container *ngTemplateOutlet="leftIconTemplate"></ng-container>
       </span>
     } @else if (leftIconClass) {
-      <i [class]="leftIconClass + ' input-component__icon input-component__icon--left'" aria-hidden="true">{{
-        leftIconContent
-      }}</i>
+      <i [class]="leftIconClass + ' ' + iconLeftClasses" aria-hidden="true">{{ leftIconContent }}</i>
     }
 
-    <input
-      [attr.id]="inputId || null"
-      [attr.name]="name || null"
-      [type]="type"
-      [placeholder]="placeholder"
-      [disabled]="isDisabled"
-      [readonly]="readOnly"
-      [attr.autocomplete]="autocomplete || null"
-      [attr.maxlength]="maxlength !== null ? maxlength : null"
-      [attr.inputmode]="inputMode ?? null"
-      [attr.aria-label]="ariaLabel ?? null"
-      [attr.aria-describedby]="ariaDescribedBy ?? null"
-      [value]="value"
-      (input)="onInput($event)"
-      (blur)="onBlurFn($event)"
-      (focus)="onFocusFn($event)"
-      [class]="nativeInputClasses"
-    />
+    @if (hasLabel && labelMode === 'overlap') {
+      <!-- Overlap: etiqueta flota sobre el borde superior del campo (estilo Material). -->
+      <div [class]="overlapAnchorClasses">
+        <label [attr.for]="resolvedInputId!" [class]="overlapLabelClasses">{{ label }}</label>
+        <input
+          [attr.id]="resolvedInputId"
+          [attr.name]="name || null"
+          [type]="type"
+          [placeholder]="placeholder"
+          [disabled]="isDisabled"
+          [readonly]="readOnly"
+          [attr.title]="nativeTitle"
+          [attr.autocomplete]="autocomplete || null"
+          [attr.maxlength]="maxlength !== null ? maxlength : null"
+          [attr.inputmode]="inputMode ?? null"
+          [attr.aria-label]="ariaLabel ?? null"
+          [attr.aria-describedby]="ariaDescribedBy ?? null"
+          [value]="value"
+          (input)="onInput($event)"
+          (blur)="onBlurFn($event)"
+          (focus)="onFocusFn($event)"
+          [class]="overlapNativeInputClasses"
+        />
+
+      </div>
+    } @else {
+      <input
+        [attr.id]="resolvedInputId"
+        [attr.name]="name || null"
+        [type]="type"
+        [placeholder]="placeholder"
+        [disabled]="isDisabled"
+        [readonly]="readOnly"
+        [attr.title]="nativeTitle"
+        [attr.autocomplete]="autocomplete || null"
+        [attr.maxlength]="maxlength !== null ? maxlength : null"
+        [attr.inputmode]="inputMode ?? null"
+        [attr.aria-label]="ariaLabel ?? null"
+        [attr.aria-describedby]="ariaDescribedBy ?? null"
+        [value]="value"
+        (input)="onInput($event)"
+        (blur)="onBlurFn($event)"
+        (focus)="onFocusFn($event)"
+        [class]="nativeInputClasses"
+      />
+    }
 
     @if (rightIconTemplate) {
-      <span class="input-component__icon input-component__icon--right" aria-hidden="true">
+      <span [class]="iconRightClasses" aria-hidden="true">
         <ng-container *ngTemplateOutlet="rightIconTemplate"></ng-container>
       </span>
     } @else if (rightIconClass) {
-      <i [class]="rightIconClass + ' input-component__icon input-component__icon--right'" aria-hidden="true">{{
-        rightIconContent
-      }}</i>
+      <i [class]="rightIconClass + ' ' + iconRightClasses" aria-hidden="true">{{ rightIconContent }}</i>
     }
-  </div>
+  </ng-template>
+
+  <!-- ─── Ramas de layout según modo de etiqueta ─── -->
+
+  @if (!hasLabel) {
+    <div [class]="wrapperClasses" (click)="focusNativeInput()">
+      <ng-container *ngTemplateOutlet="innerField"></ng-container>
+    </div>
+
+  } @else if (labelMode === 'outside') {
+    <label [attr.for]="resolvedInputId!" [class]="labelOutsideClasses">{{ label }}</label>
+    <div [class]="wrapperClasses" (click)="focusNativeInput()">
+      <ng-container *ngTemplateOutlet="innerField"></ng-container>
+    </div>
+
+  } @else if (labelMode === 'inline') {
+    <div class="box-border flex w-full max-w-full min-w-0 items-center gap-2">
+      <label [attr.for]="resolvedInputId!" [class]="labelInlineClasses">{{ label }}</label>
+      <div [class]="wrapperClasses + ' min-w-0 flex-1'" (click)="focusNativeInput()">
+        <ng-container *ngTemplateOutlet="innerField"></ng-container>
+      </div>
+    </div>
+
+  } @else if (labelMode === 'floating') {
+    <!--
+      Floating: la etiqueta empieza dentro del campo (como placeholder).
+      Al enfocar o tener valor, sube completamente por encima del wrapper.
+      Se reserva pt-5 (1.25 rem) arriba para alojar la etiqueta elevada.
+    -->
+    <div class="relative pt-5">
+      <label [attr.for]="resolvedInputId!" [class]="floatAboveLabelClasses">{{ label }}</label>
+      <div [class]="wrapperClasses" (click)="focusNativeInput()">
+        @if (leftIconTemplate) {
+          <span [class]="iconLeftClasses" aria-hidden="true">
+            <ng-container *ngTemplateOutlet="leftIconTemplate"></ng-container>
+          </span>
+        } @else if (leftIconClass) {
+          <i [class]="leftIconClass + ' ' + iconLeftClasses" aria-hidden="true">{{ leftIconContent }}</i>
+        }
+        <input
+          [attr.id]="resolvedInputId"
+          [attr.name]="name || null"
+          [type]="type"
+          [placeholder]="floatingLabelIsRaised ? placeholder : ''"
+          [disabled]="isDisabled"
+          [readonly]="readOnly"
+          [attr.title]="nativeTitle"
+          [attr.autocomplete]="autocomplete || null"
+          [attr.maxlength]="maxlength !== null ? maxlength : null"
+          [attr.inputmode]="inputMode ?? null"
+          [attr.aria-label]="ariaLabel ?? null"
+          [attr.aria-describedby]="ariaDescribedBy ?? null"
+          [value]="value"
+          (input)="onInput($event)"
+          (blur)="onBlurFn($event)"
+          (focus)="onFocusFn($event)"
+          [class]="nativeInputClasses"
+        />
+        @if (rightIconTemplate) {
+          <span [class]="iconRightClasses" aria-hidden="true">
+            <ng-container *ngTemplateOutlet="rightIconTemplate"></ng-container>
+          </span>
+        } @else if (rightIconClass) {
+          <i [class]="rightIconClass + ' ' + iconRightClasses" aria-hidden="true">{{ rightIconContent }}</i>
+        }
+      </div>
+    </div>
+
+  } @else {
+    <!-- Cubre: 'static', 'overlap' y cualquier modo futuro con wrapper estándar. -->
+    <div [class]="shellWrapperClasses" (click)="focusNativeInput()">
+      <ng-container *ngTemplateOutlet="innerField"></ng-container>
+    </div>
+  }
+
 </div>

@@ -27,7 +27,7 @@ Los estilos de muchos componentes usan **clases Tailwind** en plantillas y gette
 
 - **Angular** `>=19.0.0 <23.0.0` en `@angular/common`, `@angular/core` y `@angular/forms` (mismas majors entre sí). Cuando salga **Angular 23+**, habrá que subir el límite superior en el `package.json` de la librería y publicar una versión nueva si quieres seguir sin avisos de peer deps.
 - **@angular/forms** — necesario para `formControl` / `ngModel` en input, date-picker y searchable select.
-- **Tailwind CSS** configurado con `content` que incluya el paquete instalado, por ejemplo:
+- **Tailwind CSS** configurado con `content` que incluya el paquete instalado, más los tokens de animación/sombra que usa la librería:
 
 ```js
 // tailwind.config.js
@@ -36,7 +36,24 @@ module.exports = {
     './src/**/*.{html,ts}',
     './node_modules/arcangel-components/fesm2022/**/*.mjs',
   ],
-  // … theme, plugins
+  theme: {
+    extend: {
+      // Animación de entrada para paneles flotantes (dropdown, searchable-select, date-picker)
+      keyframes: {
+        'arc-popover-in': {
+          from: { opacity: '0', transform: 'translateY(-4px)' },
+          to:   { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+      animation: {
+        'arc-popover-in': 'arc-popover-in 150ms ease-out',
+      },
+      // Sombra de paneles flotantes
+      boxShadow: {
+        'arc-panel': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+      },
+    },
+  },
 };
 ```
 

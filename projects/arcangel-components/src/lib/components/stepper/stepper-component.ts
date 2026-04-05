@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
+  HostBinding,
   Input,
   Output,
   ChangeDetectionStrategy,
@@ -19,10 +20,11 @@ const DEFAULT_CANCEL: StepperButtonConfig = { label: 'Cancelar', variant: 'ghost
   standalone: true,
   imports: [CommonModule, ButtonComponent],
   templateUrl: './stepper-component.html',
-  styleUrls: ['./stepper-component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepperComponent {
+  @HostBinding('class')
+  readonly hostClasses = 'flex flex-col flex-auto self-stretch w-full max-w-full min-w-0 min-h-0 box-border';
   readonly DEFAULT_PREVIOUS = DEFAULT_PREVIOUS;
   readonly DEFAULT_NEXT = DEFAULT_NEXT;
   readonly DEFAULT_CANCEL = DEFAULT_CANCEL;
@@ -46,6 +48,26 @@ export class StepperComponent {
   @Output() stepChange = new EventEmitter<number>();
 
   readonly totalSteps = computed(() => this.steps.length);
+
+  /** Clases del layout horizontal según breakpoint seleccionado. */
+  get desktopClasses(): string {
+    const map: Record<'sm' | 'md' | 'lg', string> = {
+      sm: 'hidden sm:flex items-center w-full max-w-full min-w-0 flex-nowrap',
+      md: 'hidden md:flex items-center w-full max-w-full min-w-0 flex-nowrap',
+      lg: 'hidden lg:flex items-center w-full max-w-full min-w-0 flex-nowrap',
+    };
+    return map[this.breakpoint];
+  }
+
+  /** Clases del layout vertical según breakpoint seleccionado. */
+  get mobileClasses(): string {
+    const map: Record<'sm' | 'md' | 'lg', string> = {
+      sm: 'flex sm:hidden flex-col items-start w-full min-w-0',
+      md: 'flex md:hidden flex-col items-start w-full min-w-0',
+      lg: 'flex lg:hidden flex-col items-start w-full min-w-0',
+    };
+    return map[this.breakpoint];
+  }
 
   get isFirstStep(): boolean {
     return this.currentStep <= 0;

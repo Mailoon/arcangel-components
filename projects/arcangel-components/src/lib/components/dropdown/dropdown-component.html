@@ -1,7 +1,5 @@
 <div
-  class="dropdown-container"
-  [class.dropdown-full-width]="fullWidth"
-  [class.dropdown-open]="isOpen()"
+  [class]="containerClasses()"
   (click)="handleTriggerClick($event)"
 >
   <button-component
@@ -29,20 +27,17 @@
 
   @if (isOpen()) {
     <div
-      class="dropdown-panel"
-      [class]="placementClasses()"
+      data-arc-panel
+      [class]="panelBaseClasses + ' ' + placementClasses()"
       role="listbox"
       (click)="$event.stopPropagation()"
     >
       @for (item of items; track $index) {
         @if (item.divided && $index > 0) {
-          <div class="dropdown-divider"></div>
+          <div [class]="dividerClasses"></div>
         }
         <div
-          class="dropdown-item"
-          [class.dropdown-item-disabled]="item.disabled"
-          [class.dropdown-item-focused]="isItemFocused(item)"
-          [class.dropdown-item-divided]="item.divided"
+          [class]="getItemClasses(item)"
           role="option"
           [attr.aria-disabled]="item.disabled"
           [attr.aria-selected]="item.value === selectedValue"
@@ -57,7 +52,7 @@
             @if (item.iconClass) {
               <i [class]="item.iconClass" aria-hidden="true">{{ item.iconContent ?? '' }}</i>
             }
-            <span class="dropdown-item-label">{{ item.label }}</span>
+            <span [class]="itemLabelClasses">{{ item.label }}</span>
           }
         </div>
       }
@@ -66,12 +61,12 @@
 </div>
 
 <ng-template #emptyChevron>
-  <span class="dropdown-chevron-placeholder" aria-hidden="true"></span>
+  <span [class]="chevronPlaceholderClasses" aria-hidden="true"></span>
 </ng-template>
 
 <ng-template #defaultChevron>
   <svg
-    class="dropdown-chevron"
+    [class]="chevronClasses()"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     fill="none"

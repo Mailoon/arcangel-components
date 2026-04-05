@@ -1,11 +1,5 @@
-<div
-  class="table-responsive-container"
-  [class.table-responsive-sm]="breakpoint === 'sm'"
-  [class.table-responsive-md]="breakpoint === 'md'"
-  [class.table-responsive-lg]="breakpoint === 'lg'"
-  [class]="customClass"
->
-  <div class="table-responsive-desktop">
+<div class="w-full" [class]="customClass">
+  <div [class]="desktopViewClasses">
     <table-component
       [headers]="headers"
       [items]="displayItems"
@@ -17,7 +11,7 @@
       (actionClicked)="actionClicked.emit($event)"
     />
   </div>
-  <div class="table-responsive-mobile">
+  <div [class]="mobileViewClasses">
     <card-component
       [headers]="headers"
       [items]="displayItems"

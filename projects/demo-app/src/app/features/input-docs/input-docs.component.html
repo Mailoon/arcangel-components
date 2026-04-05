@@ -3,7 +3,9 @@
   <p class="text-gray-600 mb-6">
     Misma línea visual que el botón: colores (<code>variant</code>), tamaño (<code>size</code>), ancho (<code>fullWidth</code>),
     iconos y overrides Tailwind. El borde redondeado va en <code>shape</code> (predefinido) o en <code>shapeClass</code> (cualquier
-    clase Tailwind). Implementa <code>ControlValueAccessor</code> para <code>[formControl]</code> / <code>formControlName</code>.
+    clase Tailwind). Opcionalmente puedes mostrar una etiqueta con <code>label</code> y <code>labelMode</code> (<code>outside</code>,
+    <code>inline</code>, <code>static</code>, <code>floating</code>). Implementa <code>ControlValueAccessor</code> para
+    <code>[formControl]</code> / <code>formControlName</code>.
   </p>
 
   <section class="doc-card mb-8">
@@ -49,8 +51,21 @@
             <td>Capas Tailwind extra sobre el wrapper.</td>
           </tr>
           <tr>
+            <td><code>label</code></td>
+            <td>Texto de la etiqueta. Si está vacío, el campo se muestra sin etiqueta (comportamiento anterior).</td>
+          </tr>
+          <tr>
+            <td><code>labelMode</code></td>
+            <td
+              >              <code>outside</code> (por defecto) — encima del recuadro; <code>inline</code> — a la izquierda en la misma fila;
+              <code>static</code> — fija dentro del borde izquierdo; <code>floating</code> — parte dentro como placeholder y sube
+              <em>sobre</em> el campo al enfocar; <code>overlap</code> — igual pero sube sobre el borde (estilo Material).
+              Tipo exportado <code>InputLabelMode</code>.</td
+            >
+          </tr>
+          <tr>
             <td><code>placeholder</code>, <code>type</code>, <code>inputId</code>, <code>name</code>, <code>readOnly</code>, <code>maxlength</code>, <code>autocomplete</code>, <code>inputMode</code></td>
-            <td>Se pasan al <code>&lt;input&gt;</code> nativo.</td>
+            <td>Se pasan al <code>&lt;input&gt;</code> nativo. Con <code>label</code> y sin <code>inputId</code>, se genera un <code>id</code> para enlazar <code>&lt;label for&gt;</code>.</td>
           </tr>
           <tr>
             <td><code>disabled</code>, <code>ariaLabel</code>, <code>ariaDescribedBy</code>, <code>tooltip</code></td>
@@ -165,7 +180,70 @@
   </section>
 
   <section class="mb-10">
-    <h2 class="text-xl font-bold mb-2">8. Formularios reactivos</h2>
+    <h2 class="text-xl font-bold mb-2">8. Etiqueta (<code>label</code> y <code>labelMode</code>)</h2>
+    <p class="text-sm text-gray-600 mb-2">
+      Cinco disposiciones de etiqueta. <code>floating</code> — la etiqueta parte dentro del campo (como placeholder) y sube
+      <em>completamente por encima</em> del borde al enfocar/tener valor. <code>overlap</code> — sube sobre el borde superior
+      del campo (estilo Material Design). Para fijar el <code>id</code> del input usa <code>inputId</code>.
+    </p>
+    <app-doc-highlighted-code [code]="code.labelModes" language="markup" ariaLabel="Código: label y labelMode" />
+    <p class="text-sm text-gray-600 mb-1 mt-4">Tipo en TypeScript (opcional)</p>
+    <app-doc-highlighted-code [code]="code.labelModeImport" language="typescript" ariaLabel="Código: InputLabelMode" />
+    <div class="flex flex-col gap-6 max-w-xl mt-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-500 mb-1"><code>outside</code></p>
+        <input-component
+          label="Correo electrónico"
+          labelMode="outside"
+          placeholder="nombre@dominio.com"
+          type="email"
+          variant="outline"
+          [fullWidth]="true"
+        ></input-component>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 mb-1"><code>inline</code></p>
+        <input-component
+          label="Usuario"
+          labelMode="inline"
+          placeholder="tu nombre"
+          variant="outline"
+          [fullWidth]="true"
+        ></input-component>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 mb-1"><code>static</code></p>
+        <input-component
+          label="Código"
+          labelMode="static"
+          placeholder="0000"
+          variant="outline"
+          [fullWidth]="true"
+        ></input-component>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 mb-1"><code>floating</code> — etiqueta sube <em>sobre</em> el campo</p>
+        <input-component
+          label="Descripción"
+          labelMode="floating"
+          variant="outline"
+          [fullWidth]="true"
+        ></input-component>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-500 mb-1"><code>overlap</code> — etiqueta flota sobre el borde (estilo Material)</p>
+        <input-component
+          label="Descripción"
+          labelMode="overlap"
+          variant="outline"
+          [fullWidth]="true"
+        ></input-component>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">9. Formularios reactivos</h2>
     <p class="text-sm text-gray-600 mb-1">TypeScript</p>
     <app-doc-highlighted-code [code]="code.formControlTs" language="typescript" ariaLabel="Código: FormControl" />
     <p class="text-sm text-gray-600 mb-1 mt-3">Plantilla</p>

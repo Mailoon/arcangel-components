@@ -24,7 +24,6 @@ import type {
   standalone: true,
   imports: [CommonModule, TableComponent, CardComponent, PaginatorComponent],
   templateUrl: './table-responsive-component.html',
-  styleUrls: ['./table-responsive-component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableResponsiveComponent {
@@ -51,6 +50,26 @@ export class TableResponsiveComponent {
   get resolvedTotalCount(): number {
     if (!this.showPagination) return this.items.length;
     return resolveTotalCount(this.paginationMode, this.items.length, this.totalCount);
+  }
+
+  /** Clases de visibilidad para la vista tabla (desktop) según breakpoint. */
+  get desktopViewClasses(): string {
+    const map: Record<'sm' | 'md' | 'lg', string> = {
+      sm: 'hidden sm:block',
+      md: 'hidden md:block',
+      lg: 'hidden lg:block',
+    };
+    return map[this.breakpoint];
+  }
+
+  /** Clases de visibilidad para la vista card (mobile) según breakpoint. */
+  get mobileViewClasses(): string {
+    const map: Record<'sm' | 'md' | 'lg', string> = {
+      sm: 'block sm:hidden',
+      md: 'block md:hidden',
+      lg: 'block lg:hidden',
+    };
+    return map[this.breakpoint];
   }
 
   get effectivePageIndex(): number {

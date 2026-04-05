@@ -1,31 +1,28 @@
-<div class="card-list" [class]="customClass">
+<div class="flex flex-col gap-4" [class]="customClass">
   @if (displayItems.length === 0) {
-    <div class="card-empty">{{ emptyMessage }}</div>
+    <div class="p-8 text-center text-gray-500 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+      {{ emptyMessage }}
+    </div>
   } @else {
     @for (item of displayItems; track $index) {
-      <div class="card-item">
+      <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm flex flex-col gap-3">
+
         @if (actionsPosition === 'start' && hasActions()) {
-          <div class="card-actions card-actions-start">
+          <div class="flex gap-2 flex-wrap self-start">
             @for (action of actions; track action.id) {
               @if (isActionDisabled(action, item)) {
-                <span
-                  class="card-action-btn card-action-disabled"
-                  [title]="action.tooltip"
-                >
+                <span [class]="actionBtnDisabledClasses" [title]="action.tooltip">
                   @if (action.iconTemplate) {
                     <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
                   } @else if (action.iconClass) {
                     <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
                   }
-                  @if (action.label) {
-                    <span>{{ action.label }}</span>
-                  }
+                  @if (action.label) { <span>{{ action.label }}</span> }
                 </span>
               } @else {
                 <button
                   type="button"
-                  class="card-action-btn"
-                  [class]="getActionVariantClass(action.variant)"
+                  [class]="getActionButtonClasses(action.variant)"
                   [title]="action.tooltip"
                   (click)="onActionClick(action.id, item, $index)"
                 >
@@ -34,44 +31,38 @@
                   } @else if (action.iconClass) {
                     <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
                   }
-                  @if (action.label) {
-                    <span>{{ action.label }}</span>
-                  }
+                  @if (action.label) { <span>{{ action.label }}</span> }
                 </button>
               }
             }
           </div>
         }
-        <div class="card-content">
+
+        <div class="flex flex-col gap-2">
           @for (h of visibleHeaders(); track h.key) {
-            <div class="card-row">
-              <span class="card-key">{{ h.label }}</span>
-              <span class="card-value">{{ getCellValue(item, h.key) }}</span>
+            <div class="flex flex-wrap gap-2 items-baseline">
+              <span class="font-semibold text-gray-500 text-[0.8125rem] min-w-[5rem]">{{ h.label }}</span>
+              <span class="text-gray-700 text-sm">{{ getCellValue(item, h.key) }}</span>
             </div>
           }
         </div>
+
         @if (actionsPosition === 'end' && hasActions()) {
-          <div class="card-actions card-actions-end">
+          <div class="flex gap-2 flex-wrap self-end mt-1">
             @for (action of actions; track action.id) {
               @if (isActionDisabled(action, item)) {
-                <span
-                  class="card-action-btn card-action-disabled"
-                  [title]="action.tooltip"
-                >
+                <span [class]="actionBtnDisabledClasses" [title]="action.tooltip">
                   @if (action.iconTemplate) {
                     <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
                   } @else if (action.iconClass) {
                     <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
                   }
-                  @if (action.label) {
-                    <span>{{ action.label }}</span>
-                  }
+                  @if (action.label) { <span>{{ action.label }}</span> }
                 </span>
               } @else {
                 <button
                   type="button"
-                  class="card-action-btn"
-                  [class]="getActionVariantClass(action.variant)"
+                  [class]="getActionButtonClasses(action.variant)"
                   [title]="action.tooltip"
                   (click)="onActionClick(action.id, item, $index)"
                 >
@@ -80,14 +71,13 @@
                   } @else if (action.iconClass) {
                     <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
                   }
-                  @if (action.label) {
-                    <span>{{ action.label }}</span>
-                  }
+                  @if (action.label) { <span>{{ action.label }}</span> }
                 </button>
               }
             }
           </div>
         }
+
       </div>
     }
   }

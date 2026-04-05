@@ -1,10 +1,11 @@
 {
   "name": "arcangel-workspace",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve demo-app",
     "build": "ng build arcangel-components",
+    "build:demo": "ng build demo-app",
     "watch": "ng build arcangel-components --watch --configuration development",
     "test": "ng test",
     "publish:lib": "ng build arcangel-components && npm publish ./dist/arcangel-components"

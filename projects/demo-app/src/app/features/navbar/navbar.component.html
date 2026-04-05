@@ -1,93 +1,73 @@
-<nav class="space-y-2">
-  <p class="text-sm uppercase tracking-widest text-gray-300 mb-3">Navegación</p>
+<nav class="doc-nav" aria-label="Documentación">
+  <div class="doc-nav__group">
+    <p class="doc-nav__heading">General</p>
+    <ul class="doc-nav__list">
+      <li>
+        <a
+          routerLink="/"
+          routerLinkActive="doc-nav__link--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="doc-nav__link"
+        >
+          Inicio
+        </a>
+      </li>
+    </ul>
+  </div>
 
-  <button-component
-    label="Inicio"
-    variant="ghost"
-    size="md"
-    [routerLink]="['/']"
-    [fullWidth]="true"
-    [backgroundClass]="'hover:bg-slate-700'"
-    [textClass]="'text-white'"
-  ></button-component>
+  <div class="doc-nav__group">
+    <p class="doc-nav__heading">Entrada y acciones</p>
+    <ul class="doc-nav__list">
+      <li>
+        <a routerLink="/input" routerLinkActive="doc-nav__link--active" class="doc-nav__link">Input</a>
+      </li>
+      <li>
+        <a routerLink="/date-picker" routerLinkActive="doc-nav__link--active" class="doc-nav__link">Date picker</a>
+      </li>
+      <li>
+        <a routerLink="/buttons" routerLinkActive="doc-nav__link--active" class="doc-nav__link">Botones</a>
+      </li>
+    </ul>
+  </div>
 
-  <button-component
-    label="Input Docs"
-    variant="ghost"
-    size="md"
-    [routerLink]="['/input']"
-    [fullWidth]="true"
-    [backgroundClass]="'hover:bg-slate-700'"
-    [textClass]="'text-white'"
-  ></button-component>
+  <div class="doc-nav__group">
+    <p class="doc-nav__heading">Selección</p>
+    <ul class="doc-nav__list">
+      <li>
+        <a routerLink="/dropdown" routerLinkActive="doc-nav__link--active" class="doc-nav__link">Select (UI)</a>
+      </li>
+      <li>
+        <a routerLink="/searchable-select" routerLinkActive="doc-nav__link--active" class="doc-nav__link"
+          >Searchable select</a
+        >
+      </li>
+    </ul>
+  </div>
 
-  <button-component
-    label="Date picker"
-    variant="ghost"
-    size="md"
-    [routerLink]="['/date-picker']"
-    [fullWidth]="true"
-    [backgroundClass]="'hover:bg-slate-700'"
-    [textClass]="'text-white'"
-  ></button-component>
+  <div class="doc-nav__group">
+    <p class="doc-nav__heading">Datos</p>
+    <ul class="doc-nav__list">
+      <li>
+        <a routerLink="/table" routerLinkActive="doc-nav__link--active" class="doc-nav__link">Tabla</a>
+      </li>
+    </ul>
+  </div>
 
-  <button-component
-    label="Buttons Docs"
-    variant="ghost"
-    size="md"
-    [routerLink]="['/buttons']"
-    [fullWidth]="true"
-    [backgroundClass]="'hover:bg-slate-700'"
-    [textClass]="'text-white'"
-  ></button-component>
+  <div class="doc-nav__group">
+    <p class="doc-nav__heading">Flujos</p>
+    <ul class="doc-nav__list">
+      <li>
+        <a routerLink="/stepper" routerLinkActive="doc-nav__link--active" class="doc-nav__link">Stepper</a>
+      </li>
+    </ul>
+  </div>
 
-  <button-component
-    label="Select (variantes UI)"
-    variant="ghost"
-    size="md"
-    [routerLink]="['/dropdown']"
-    [fullWidth]="true"
-    [backgroundClass]="'hover:bg-slate-700'"
-    [textClass]="'text-white'"
-  ></button-component>
-
-  <button-component
-    label="Searchable Select"
-    variant="ghost"
-    size="md"
-    [routerLink]="['/searchable-select']"
-    [fullWidth]="true"
-    [backgroundClass]="'hover:bg-slate-700'"
-    [textClass]="'text-white'"
-  ></button-component>
-
-  <button-component
-    label="Table Docs"
-    variant="ghost"
-    size="md"
-    [routerLink]="['/table']"
-    [fullWidth]="true"
-    [backgroundClass]="'hover:bg-slate-700'"
-    [textClass]="'text-white'"
-  ></button-component>
-
-  <button-component
-    label="Stepper Docs"
-    variant="ghost"
-    size="md"
-    [routerLink]="['/stepper']"
-    [fullWidth]="true"
-    [backgroundClass]="'hover:bg-slate-700'"
-    [textClass]="'text-white'"
-  ></button-component>
-
-  <button-component
-    label="Extras (future)"
-    variant="ghost"
-    size="md"
-    [routerLink]="['/extras']"
-    [fullWidth]="true"
-    [backgroundClass]="'hover:bg-slate-700'"
-    [textClass]="'text-white'"
-  ></button-component>
+  <div class="doc-nav__group">
+    <p class="doc-nav__heading">Laboratorio</p>
+    <ul class="doc-nav__list">
+      <li>
+        <a routerLink="/extras" routerLinkActive="doc-nav__link--active" class="doc-nav__link">Extras</a>
+      </li>
+    </ul>
+  </div>
 </nav>

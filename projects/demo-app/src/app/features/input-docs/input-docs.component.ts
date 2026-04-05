@@ -104,6 +104,53 @@ export class InputDocsComponent {
   [fullWidth]="true">
 </input-component>`,
 
+    labelModes: `<!-- Por defecto labelMode="outside" -->
+<input-component
+  label="Correo electrónico"
+  labelMode="outside"
+  placeholder="nombre@dominio.com"
+  type="email"
+  variant="outline"
+  [fullWidth]="true">
+</input-component>
+
+<input-component
+  label="Usuario"
+  labelMode="inline"
+  placeholder="tu nombre"
+  variant="outline"
+  [fullWidth]="true">
+</input-component>
+
+<input-component
+  label="Código"
+  labelMode="static"
+  placeholder="0000"
+  variant="outline"
+  [fullWidth]="true">
+</input-component>
+
+<!-- floating: etiqueta parte dentro, sube SOBRE el wrapper al enfocar -->
+<input-component
+  label="Descripción"
+  labelMode="floating"
+  placeholder="Escribe algo…"
+  variant="outline"
+  [fullWidth]="true">
+</input-component>
+
+<!-- overlap: etiqueta flota sobre el borde (estilo Material Design) -->
+<input-component
+  label="Descripción"
+  labelMode="overlap"
+  variant="outline"
+  [fullWidth]="true">
+</input-component>`,
+
+    labelModeImport: `import type { InputLabelMode } from '@arcange/components/input';
+
+readonly modo: InputLabelMode = 'floating';`,
+
     formControlTs: `readonly searchControl = new FormControl('', { nonNullable: true });`,
 
     formControlTpl: `<input-component

@@ -28,7 +28,6 @@ const DEFAULT_SLOT_BUDGET = 8;
   standalone: true,
   imports: [CommonModule, SearchableSelectComponent],
   templateUrl: './paginator.component.html',
-  styleUrls: ['./paginator.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginatorComponent {

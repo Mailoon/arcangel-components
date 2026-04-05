@@ -1,13 +1,11 @@
 <div
-  class="date-picker-container"
-  [class.date-picker-container--open]="isOpen"
-  [class.date-picker-container--full-width]="fullWidth"
-  [class]="customClass"
+  [class]="containerClasses"
   [title]="tooltip ?? ''"
   (click)="onRootClick($event)"
 >
-  <div class="date-picker-component" [class.w-full]="fullWidth">
+  <div [class.w-full]="fullWidth">
     <button
+      data-dp-trigger
       type="button"
       [class]="wrapperClasses"
       [disabled]="isDisabled"
@@ -19,46 +17,41 @@
       (keydown)="onTriggerKeydown($event)"
     >
       @if (leftIconTemplate) {
-        <span class="input-component__icon input-component__icon--left" aria-hidden="true">
+        <span [class]="triggerIconLeft" aria-hidden="true">
           <ng-container *ngTemplateOutlet="leftIconTemplate"></ng-container>
         </span>
       } @else if (leftIconClass) {
-        <i [class]="leftIconClass + ' input-component__icon input-component__icon--left'" aria-hidden="true">{{
-          leftIconContent
-        }}</i>
+        <i [class]="leftIconClass + ' ' + triggerIconLeft" aria-hidden="true">{{ leftIconContent }}</i>
       }
 
       <span [class]="nativeFieldClasses + (showPlaceholderStyle ? ' text-gray-400' : '')">{{ displayLabel }}</span>
 
       @if (rightIconTemplate) {
-        <span class="input-component__icon input-component__icon--right" aria-hidden="true">
+        <span [class]="triggerIconRight" aria-hidden="true">
           <ng-container *ngTemplateOutlet="rightIconTemplate"></ng-container>
         </span>
       } @else if (rightIconClass) {
-        <i [class]="rightIconClass + ' input-component__icon input-component__icon--right'" aria-hidden="true">{{
-          rightIconContent
-        }}</i>
+        <i [class]="rightIconClass + ' ' + triggerIconRight" aria-hidden="true">{{ rightIconContent }}</i>
       } @else if (showCalendarIcon) {
-        <i class="material-icons input-component__icon input-component__icon--right text-gray-500" aria-hidden="true"
-          >calendar_today</i
-        >
+        <i class="material-icons text-gray-500 -ml-0.5 shrink-0 text-[1.125em] leading-none opacity-90" aria-hidden="true">calendar_today</i>
       }
     </button>
   </div>
 
   @if (isOpen) {
     <div
-      class="date-picker-panel"
-      [class]="panelPositionClasses + ' ' + calendarPanelClass"
+      data-arc-panel
+      [class]="panelClasses + ' ' + panelPositionClasses"
       [id]="panelId"
       role="dialog"
       aria-modal="true"
       [attr.aria-label]="ariaLabel || 'Calendario'"
       (click)="$event.stopPropagation()"
     >
-      <div class="date-picker-panel__header">
+      <!-- Cabecera: mes + año usando dropdowns -->
+      <div class="flex flex-wrap gap-2 mb-2 items-stretch">
         <dropdown-component
-          class="date-picker-panel__dd"
+          class="flex-[1_1_8rem] min-w-0"
           [items]="monthDropdownItems"
           [selectedValue]="viewMonth0"
           [variant]="headerDropdownVariant"
@@ -70,11 +63,11 @@
           [closeOnSelect]="true"
           [placeholder]="'Mes'"
           [ariaLabel]="'Elegir mes'"
-          [customClass]="'date-picker-header-dropdown'"
+          [customClass]="headerDropdownCustomClass"
           (itemSelected)="onMonthDropdownSelect($event)"
         ></dropdown-component>
         <dropdown-component
-          class="date-picker-panel__dd date-picker-panel__dd--year"
+          class="flex-[1_1_5.5rem] min-w-0"
           [items]="yearDropdownItems"
           [selectedValue]="viewYear"
           [variant]="headerDropdownVariant"
@@ -86,29 +79,28 @@
           [closeOnSelect]="true"
           [placeholder]="'Año'"
           [ariaLabel]="'Elegir año'"
-          [customClass]="'date-picker-header-dropdown'"
+          [customClass]="headerDropdownCustomClass"
           (itemSelected)="onYearDropdownSelect($event)"
         ></dropdown-component>
       </div>
 
-      <div class="date-picker-panel__weekdays" role="row">
+      <!-- Cabecera días de la semana -->
+      <div class="grid grid-cols-7 gap-0.5 mb-1" role="row">
         @for (w of orderedWeekdayLabels; track $index) {
-          <span class="date-picker-panel__weekday" role="columnheader">{{ w }}</span>
+          <span [class]="weekdayLabelClasses" role="columnheader">{{ w }}</span>
         }
       </div>
 
-      <div class="date-picker-panel__grid" role="grid" [attr.aria-label]="'Días del mes'">
+      <!-- Grilla de días -->
+      <div class="flex flex-col gap-0.5" role="grid" [attr.aria-label]="'Días del mes'">
         @for (row of weeks; track $index; let ri = $index) {
-          <div class="date-picker-panel__row" role="row">
+          <div class="grid grid-cols-7 gap-0.5" role="row">
             @for (cell of row; track cell.date.getTime(); let ci = $index) {
               @let idx = cellFlatIndex(ri, ci);
               <button
                 type="button"
-                class="date-picker-day"
+                [class]="getDayCellClasses(cell, ri, ci)"
                 role="gridcell"
-                [class.date-picker-day--outside]="!cell.inMonth"
-                [class.date-picker-day--selected]="isSelectedDate(cell.date)"
-                [class.date-picker-day--focused]="isFocusedCell(ri, ci)"
                 [disabled]="!cell.inMonth || cell.disabled"
                 [attr.data-date-cell]="instanceId + '-' + idx"
                 (focus)="onDayButtonFocus(ri, ci)"

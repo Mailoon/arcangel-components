@@ -18,18 +18,24 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ButtonComponent } from '../button';
 import type {
   DropdownItem,
-  DropdownVariant,
-  DropdownSize,
-  DropdownShape,
   DropdownPlacement,
 } from '../dropdown/dropdown-component';
+import {
+  getOverlayContainerClasses,
+  getOverlayPanelClasses,
+  getOverlayItemClasses,
+  OVERLAY_DIVIDER_CLASSES,
+  OVERLAY_ITEM_LABEL_CLASSES,
+  getChevronClasses,
+} from '../../shared/overlay-styles';
+import { placementToPositionClasses } from '../../shared/dropdown-placement.utils';
+import { ArcControlBase } from '../../shared/arc-control.base';
 
 @Component({
   selector: 'searchable-select-component',
   standalone: true,
   imports: [CommonModule, ButtonComponent],
   templateUrl: './searchable-select.component.html',
-  styleUrls: ['./searchable-select.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -39,30 +45,13 @@ import type {
     },
   ],
 })
-export class SearchableSelectComponent implements ControlValueAccessor, OnChanges {
+export class SearchableSelectComponent extends ArcControlBase implements ControlValueAccessor, OnChanges {
   private readonly elementRef = inject(ElementRef);
 
   @Input() label = '';
   @Input() placeholder = 'Seleccionar...';
   @Input() items: DropdownItem[] = [];
-  @Input() disabled = false;
-
-  @Input() variant: DropdownVariant = 'primary';
-  @Input() shape: DropdownShape = 'rounded';
-  @Input() size: DropdownSize = 'md';
-  @Input() fullWidth = false;
   @Input() square = false;
-
-  @Input() leftIconClass = '';
-  @Input() rightIconClass = '';
-  @Input() leftIconTemplate?: TemplateRef<unknown>;
-  @Input() rightIconTemplate?: TemplateRef<unknown>;
-
-  @Input() backgroundClass = '';
-  @Input() textClass = '';
-  @Input() borderClass = '';
-  @Input() hoverClass = '';
-  @Input() customClass = '';
 
   /**
    * Si no se define: en modo simple cierra al elegir; en `multiple` el panel queda abierto para seguir eligiendo.
@@ -85,10 +74,6 @@ export class SearchableSelectComponent implements ControlValueAccessor, OnChange
   @Input() loadingMore = false;
   /** Distancia al fondo del scroll (px) para emitir loadMore */
   @Input() lazyLoadThreshold = 48;
-
-  @Input() ariaLabel?: string;
-  @Input() ariaDescribedBy?: string;
-  @Input() tooltip?: string;
 
   @Input() itemTemplate?: TemplateRef<{ $implicit: DropdownItem }>;
 
@@ -144,14 +129,31 @@ export class SearchableSelectComponent implements ControlValueAccessor, OnChange
     return this.disabled || this.cvaDisabled;
   }
 
+  // === CSS Classes (Tailwind via shared) ===
+  get containerClasses(): string {
+    return getOverlayContainerClasses(this.fullWidth, this.isOpen);
+  }
+  readonly panelBaseClasses = getOverlayPanelClasses({ maxHeight: 'max-h-48' });
+  readonly searchWrapClasses = 'px-2 py-2 border-b border-gray-200 shrink-0';
+  readonly searchInputClasses =
+    'w-full box-border px-3 py-2 text-sm border border-gray-300 rounded-md outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500';
+  readonly listClasses = 'max-h-48 overflow-y-auto py-1';
+  readonly dividerClasses = OVERLAY_DIVIDER_CLASSES;
+  readonly itemLabelClasses = OVERLAY_ITEM_LABEL_CLASSES;
+  get chevronClasses(): string {
+    return getChevronClasses(this.isOpen);
+  }
+
+  getItemClasses(item: DropdownItem, index: number): string {
+    return getOverlayItemClasses({
+      disabled: item.disabled,
+      focused: this.isItemFocused(index),
+      divided: item.divided,
+    });
+  }
+
   get placementClasses(): string {
-    const map: Record<DropdownPlacement, string> = {
-      'bottom-start': 'top-full left-0 mt-1',
-      'bottom-end': 'top-full right-0 mt-1',
-      'top-start': 'bottom-full left-0 mb-1',
-      'top-end': 'bottom-full right-0 mb-1',
-    };
-    return map[this.placement] ?? map['bottom-start'];
+    return placementToPositionClasses(this.placement);
   }
 
   /** Lista mostrada: siempre la que envía el padre en items */
@@ -253,7 +255,7 @@ export class SearchableSelectComponent implements ControlValueAccessor, OnChange
   handleTriggerClick(event: MouseEvent) {
     if (this.isDisabled) return;
     const target = event.target as Node;
-    if (this.elementRef.nativeElement.querySelector('.searchable-select-panel')?.contains(target)) {
+    if (this.elementRef.nativeElement.querySelector('[data-arc-panel]')?.contains(target)) {
       return;
     }
     this.toggle();

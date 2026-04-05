@@ -16,13 +16,13 @@ import type {
 } from './types';
 import { PaginatorComponent } from '../paginator/paginator.component';
 import { computeDisplayItems, resolveTotalCount, totalPages } from '../paginator/pagination-helpers';
+import { getCompactActionButtonClasses, COMPACT_ACTION_DISABLED_CLASSES } from '../../shared/arc-control-styles';
 
 @Component({
   selector: 'table-component',
   standalone: true,
   imports: [CommonModule, PaginatorComponent],
   templateUrl: './table-component.html',
-  styleUrls: ['./table-component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent {
@@ -87,13 +87,9 @@ export class TableComponent {
     this.actionClicked.emit({ actionId, item, index });
   }
 
-  getActionVariantClass(variant?: string): string {
-    const map: Record<string, string> = {
-      primary: 'bg-blue-600 text-white',
-      secondary: 'bg-gray-200 text-gray-800',
-      ghost: 'bg-transparent text-gray-700',
-      danger: 'bg-red-600 text-white',
-    };
-    return map[variant ?? 'ghost'] ?? map['ghost'];
+  readonly actionBtnDisabledClasses = COMPACT_ACTION_DISABLED_CLASSES;
+
+  getActionButtonClasses(variant?: string): string {
+    return getCompactActionButtonClasses(variant);
   }
 }

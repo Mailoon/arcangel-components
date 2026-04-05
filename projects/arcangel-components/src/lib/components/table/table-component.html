@@ -1,111 +1,114 @@
-<div class="table-root" [class]="customClass">
-  <div class="table-scroll">
-  <table class="table-component" [class.table-striped]="striped">
-    <thead>
-      <tr>
-        @if (actionsPosition === 'start' && actions.length) {
-          <th class="table-actions-col">Acciones</th>
-        }
-        @for (h of headers; track h.key) {
-          <th>{{ h.label }}</th>
-        }
-        @if (actionsPosition === 'end' && actions.length) {
-          <th class="table-actions-col">Acciones</th>
-        }
-      </tr>
-    </thead>
-    <tbody>
-      @if (displayItems.length === 0) {
+<div class="relative z-0 overflow-visible rounded-lg border border-gray-200" [class]="customClass">
+  <div class="overflow-x-auto overflow-y-visible rounded-t-lg">
+    <table class="w-full border-collapse text-sm">
+      <thead>
         <tr>
-          <td [attr.colspan]="headers.length + (actions.length ? 1 : 0)" class="table-empty">
-            {{ emptyMessage }}
-          </td>
+          @if (actionsPosition === 'start' && actions.length) {
+            <th class="px-4 py-3 text-left bg-gray-50 font-semibold text-gray-700 border-b border-gray-200 w-[1%] whitespace-nowrap">
+              Acciones
+            </th>
+          }
+          @for (h of headers; track h.key) {
+            <th class="px-4 py-3 text-left bg-gray-50 font-semibold text-gray-700 border-b border-gray-200">
+              {{ h.label }}
+            </th>
+          }
+          @if (actionsPosition === 'end' && actions.length) {
+            <th class="px-4 py-3 text-left bg-gray-50 font-semibold text-gray-700 border-b border-gray-200 w-[1%] whitespace-nowrap">
+              Acciones
+            </th>
+          }
         </tr>
-      } @else {
-        @for (item of displayItems; track $index) {
-          <tr [class.table-striped-row]="striped && $index % 2 === 1">
-            @if (actionsPosition === 'start' && actions.length) {
-              <td class="table-actions-cell">
-                <div class="table-actions">
-                  @for (action of allActions; track action.id) {
-                    @if (isActionDisabled(action, item)) {
-                      <span class="table-action-btn table-action-disabled" [title]="action.tooltip">
-                        @if (action.iconTemplate) {
-                          <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
-                        } @else if (action.iconClass) {
-                          <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
-                        }
-                        @if (action.label) {
-                          <span>{{ action.label }}</span>
-                        }
-                      </span>
-                    } @else {
-                      <button
-                        type="button"
-                        class="table-action-btn"
-                        [class]="getActionVariantClass(action.variant)"
-                        [title]="action.tooltip"
-                        (click)="onActionClick(action.id, item, $index)"
-                      >
-                        @if (action.iconTemplate) {
-                          <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
-                        } @else if (action.iconClass) {
-                          <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
-                        }
-                        @if (action.label) {
-                          <span>{{ action.label }}</span>
-                        }
-                      </button>
-                    }
-                  }
-                </div>
-              </td>
-            }
-            @for (h of headers; track h.key) {
-              <td>{{ getCellValue(item, h.key) }}</td>
-            }
-            @if (actionsPosition === 'end' && actions.length) {
-              <td class="table-actions-cell">
-                <div class="table-actions">
-                  @for (action of allActions; track action.id) {
-                    @if (isActionDisabled(action, item)) {
-                      <span class="table-action-btn table-action-disabled" [title]="action.tooltip">
-                        @if (action.iconTemplate) {
-                          <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
-                        } @else if (action.iconClass) {
-                          <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
-                        }
-                        @if (action.label) {
-                          <span>{{ action.label }}</span>
-                        }
-                      </span>
-                    } @else {
-                      <button
-                        type="button"
-                        class="table-action-btn"
-                        [class]="getActionVariantClass(action.variant)"
-                        [title]="action.tooltip"
-                        (click)="onActionClick(action.id, item, $index)"
-                      >
-                        @if (action.iconTemplate) {
-                          <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
-                        } @else if (action.iconClass) {
-                          <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
-                        }
-                        @if (action.label) {
-                          <span>{{ action.label }}</span>
-                        }
-                      </button>
-                    }
-                  }
-                </div>
-              </td>
-            }
+      </thead>
+      <tbody>
+        @if (displayItems.length === 0) {
+          <tr>
+            <td
+              [attr.colspan]="headers.length + (actions.length ? 1 : 0)"
+              class="text-center text-gray-500 p-8 border-b border-gray-200"
+            >
+              {{ emptyMessage }}
+            </td>
           </tr>
+        } @else {
+          @for (item of displayItems; track $index) {
+            <tr
+              class="hover:bg-gray-50"
+              [class.bg-gray-100]="striped && $index % 2 === 1"
+              [class.hover:bg-gray-200]="striped && $index % 2 === 1"
+            >
+              @if (actionsPosition === 'start' && actions.length) {
+                <td class="px-4 py-3 border-b border-gray-200 whitespace-nowrap">
+                  <div class="flex gap-2 items-center flex-wrap">
+                    @for (action of allActions; track action.id) {
+                      @if (isActionDisabled(action, item)) {
+                        <span [class]="actionBtnDisabledClasses" [title]="action.tooltip">
+                          @if (action.iconTemplate) {
+                            <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
+                          } @else if (action.iconClass) {
+                            <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
+                          }
+                          @if (action.label) { <span>{{ action.label }}</span> }
+                        </span>
+                      } @else {
+                        <button
+                          type="button"
+                          [class]="getActionButtonClasses(action.variant)"
+                          [title]="action.tooltip"
+                          (click)="onActionClick(action.id, item, $index)"
+                        >
+                          @if (action.iconTemplate) {
+                            <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
+                          } @else if (action.iconClass) {
+                            <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
+                          }
+                          @if (action.label) { <span>{{ action.label }}</span> }
+                        </button>
+                      }
+                    }
+                  </div>
+                </td>
+              }
+              @for (h of headers; track h.key) {
+                <td class="px-4 py-3 border-b border-gray-200">{{ getCellValue(item, h.key) }}</td>
+              }
+              @if (actionsPosition === 'end' && actions.length) {
+                <td class="px-4 py-3 border-b border-gray-200 whitespace-nowrap">
+                  <div class="flex gap-2 items-center flex-wrap">
+                    @for (action of allActions; track action.id) {
+                      @if (isActionDisabled(action, item)) {
+                        <span [class]="actionBtnDisabledClasses" [title]="action.tooltip">
+                          @if (action.iconTemplate) {
+                            <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
+                          } @else if (action.iconClass) {
+                            <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
+                          }
+                          @if (action.label) { <span>{{ action.label }}</span> }
+                        </span>
+                      } @else {
+                        <button
+                          type="button"
+                          [class]="getActionButtonClasses(action.variant)"
+                          [title]="action.tooltip"
+                          (click)="onActionClick(action.id, item, $index)"
+                        >
+                          @if (action.iconTemplate) {
+                            <ng-container *ngTemplateOutlet="action.iconTemplate"></ng-container>
+                          } @else if (action.iconClass) {
+                            <i [class]="action.iconClass">{{ action.iconContent ?? '' }}</i>
+                          }
+                          @if (action.label) { <span>{{ action.label }}</span> }
+                        </button>
+                      }
+                    }
+                  </div>
+                </td>
+              }
+            </tr>
+          }
         }
-      }
-    </tbody>
-  </table>
+      </tbody>
+    </table>
   </div>
   @if (showPagination) {
     <paginator-component
